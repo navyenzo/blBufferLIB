@@ -71,11 +71,11 @@ The blBuffer class defines many additional abstract concepts that allow the user
   
   - ```cbegin()```/```cend()```
   
-  - ```rbegin()```/rend()```
+  - ```rbegin()```/```rend()```
   
   - ```crbegin()```/```crend()```
   
-- It defines *stl-algorithms-compatible* **_circular_iterators_** which can be used in *"stl-like* algorithms such as ```std::copy```:
+- It defines *stl-algorithms-compatible* **_circular_iterators_** which can be used in *stl-like* algorithms such as ```std::copy```:
   
   - ```circ_begin(maxNumOfCirculations)```
   
@@ -101,7 +101,7 @@ The blBuffer class defines many additional abstract concepts that allow the user
 
 - It defines all the equivalent **roi circular iterators** as the ones above, which can be used in **stl-like algorithms** to parse through the buffer's ROI
 
-The blBuffer class defines also a single **circular write iterator** with corresponding *write* functions that are thread-safe and allow multiple parallel threads to write onto a common buffer
+The blBuffer class defines also a single **circular write iterator** with corresponding **write** functions that are thread-safe and allow multiple parallel threads to write onto a common buffer
 
 - The buffer offers a ```isBufferBeingCurrentlyWrittenTo()``` function which allows a user to ask whether the buffer is being currently written to
 
