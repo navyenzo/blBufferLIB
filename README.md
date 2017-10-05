@@ -2,11 +2,15 @@
 
 ## What is it?
 
-blBufferLIB is a header-only template library that defines the type ```blBuffer<T>```, which takes a generic contiguous buffer and interprets it as an N-Dimensional space
+blBufferLIB is a header-only template library that defines the type ```blBuffer<T>``` as well as useful **circular iterators** and **circular reverse iterators**, which take a generic contiguous buffer and interpret it as an N-Dimensional space
 
-- The blBuffer class can hold its own contiguous data or *wrap* existing external contiguous data
+- The blBuffer class can:
 
-  - That means that if you wrap for example an ```std::vector<T>``` with ```blBuffer<T>```, it would then allow the contiguous ```std::vector<T>``` array to be seen as an N-Dimensional buffer
+  - Hold its own contiguous data
+
+  - Or *wrap* existing user supplied external contiguous data
+
+  - That means that if you *wrap* for example an ```std::vector<T>``` with ```blBuffer<T>```, it would then allow the contiguous ```std::vector<T>``` array to be seen as an N-Dimensional buffer
 
 - The buffer defines ```size(i)``` and ```length(i)``` functions which return the respective dimensional sizes/lengths as well as the ```size()``` andn ```length()``` functions which return the overall buffer length
 
