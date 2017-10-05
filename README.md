@@ -2,15 +2,18 @@
 
 ## What is it?
 
-blBufferLIB is a header-only template library that defines the type "blBuffer<T>", which takes a generic contiguous buffer and interprets it as an N-Dimensional space
+blBufferLIB is a header-only template library that defines the type ```blBuffer<T>```, which takes a generic contiguous buffer and interprets it as an N-Dimensional space
 
-The blBuffer class can hold its own contiguous data or "wrap" existing external contiguous data.  That means that if you wrap for example an std::vector<T> with blBuffer<T>, it would then allow the contiguous std::vector<T> array to be seen as an N-Dimensional buffer
+- The blBuffer class can hold its own contiguous data or *wrap* existing external contiguous data
 
-The buffer defines "size(i)" functions which return the dimensional sizes as well as the "size()" function which returns the overall buffer length.
+  - That means that if you wrap for example an ```std::vector<T>``` with ```blBuffer<T>```, it would then allow the contiguous ```std::vector<T>``` array to be seen as an N-Dimensional buffer
 
-The buffer also defines specially named "size" functions such as "rows", "cols", "pages", "height", "width", "depth" for the first 3 dimensions
+- The buffer defines *size(i)* functions which return the respective dimensional sizes as well as the *size()* function which returns the overall buffer length
 
-The blBuffer class defines access "operator()" and "at" functions as well as their circular counterparts such as "circ_at" so that the buffer's data, either internal or external, can be accessed with N-Dimensional set of coordinates:
+- The buffer also defines specially named *size* functions such as *rows*, *cols*, *pages*, *height*, *width*, *depth* for the first 3 dimensions
+
+- The blBuffer class defines access *operator()* and *at* functions as well as _circular_ counterparts such as *circ_at* so that the buffer's data, either internal or external, can be accessed with N-Dimensional set of coordinates:
+
 > For example:
 ```c++
 // Here we create a 3d buffer of size (3 x 3 x 10)
@@ -28,24 +31,32 @@ auto dataPoint = myBuffer(2);
 
 
 
-// Access data point using
-// 3d coordinates
+// Here we access a data point
+// using 3d coordinates
 
 auto dataPoint2 = myBuffer(0,2,3);
 
 
 
-// Access data circularly
-// as if buffer was a 1d-buffer
+// Here we access a data point
+// cicularly as if buffer was a
+// 1d-buffer
 
 auto dataPoint3 = myBuffer.circ_at(100023);
 
 
 
-// Access data circularly
-// using 3d coordinates
+// Here we access a data point
+// circularly using 3d coordinates
 
 auto dataPoint3 = myBuffer.circ_at(1000,2231,124);
+
+
+
+// Here we ask for the size/length
+// of the 2nd dimensional
+
+auto width = myBuffer.size(2);
 ```
 
 The blBuffer class defines many additional abstract concepts that allow the user to do some advanced manipulation of data with little to no effort:
