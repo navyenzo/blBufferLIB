@@ -72,7 +72,9 @@ namespace blBufferLIB
 
 
 //-------------------------------------------------------------------
-template<typename blBufferType>
+template<typename blBufferType,
+         typename blBufferPtr = blBufferType*>
+
 class blCircularIterator
 {
 public: // Iterator traits
@@ -81,18 +83,18 @@ public: // Iterator traits
 
     using iterator_category = std::random_access_iterator_tag;
     using value_type = blBufferType;
-    using difference_type = ptrdiff_t;
-    using pointer = blBufferType*;
+    using difference_type = std::ptrdiff_t;
+    using pointer = blBufferPtr;
     using reference = blBufferType&;
 
 
 
-public: // Public typedefs
+public: // Public aliases
 
 
 
-    typedef decltype( std::declval<blBufferType>().at() )           blDataType;
-    typedef decltype( &std::declval<blBufferType>().at() )          blDataTypePtr;
+    using blDataType = decltype( std::declval<blBufferType>().begin()[0] );
+    using blDataPtr = decltype( std::declval<blBufferType>().begin() );
 
 
 
@@ -100,23 +102,17 @@ public: // Constructors and destructors
 
 
 
-    // No default constructor
+    // Default constructor
 
-    blCircularIterator() = delete;
-
-
-
-    // Constructor from a buffer reference
-
-    blCircularIterator(blBufferType& buffer,
-                       const std::ptrdiff_t& dataIndex,
-                       const std::ptrdiff_t& maxNumberOfCirculations);
+    blCircularIterator(const blBufferPtr& bufferPtr = blBufferPtr(nullptr),
+                       const std::ptrdiff_t& dataIndex = std::ptrdiff_t(0),
+                       const std::ptrdiff_t& maxNumberOfCirculations = std::ptrdiff_t(1));
 
 
 
     // Copy constructor
 
-    blCircularIterator(const blCircularIterator<blBufferType>& circularIterator);
+    blCircularIterator(const blCircularIterator<blBufferType,blBufferPtr>& circularIterator);
 
 
 
@@ -136,8 +132,8 @@ public: // Public static functions
     // buffer size
 
     template<typename blIntegerType>
-    static std::size_t                          circ_index(const blIntegerType& index,
-                                                           const std::size_t& totalLength)
+    static std::size_t                                  circ_index(const blIntegerType& index,
+                                                                   const std::size_t& totalLength)
     {
         return static_cast<std::size_t>( (index % static_cast<blIntegerType>(totalLength) + static_cast<blIntegerType>(totalLength)) ) % totalLength;
     }
@@ -152,10 +148,15 @@ public: // Public functions
     // the validity of the iterator
     // just like a standard pointer
 
-    operator                                    bool()const
+    operator                                            bool()const
     {
-        if(m_buffer.size() > 0)
-            return true;
+        if(m_bufferPtr)
+        {
+            if(m_bufferPtr->size() > 0)
+                return true;
+            else
+                return false;
+        }
         else
             return false;
     }
@@ -164,15 +165,15 @@ public: // Public functions
 
     // Comparator operators
 
-    bool                                        operator==(const blCircularIterator<blBufferType>& imageCircularIterator)const;
-    bool                                        operator!=(const blCircularIterator<blBufferType>& imageCircularIterator)const;
+    bool                                                operator==(const blCircularIterator<blBufferType,blBufferPtr>& circularIterator)const;
+    bool                                                operator!=(const blCircularIterator<blBufferType,blBufferPtr>& circularIterator)const;
 
 
 
     // Function returning the
     // iterator's base
 
-    blCircularIterator<blBufferType>            base();
+    blCircularIterator<blBufferType,blBufferPtr>        base();
 
 
 
@@ -185,8 +186,8 @@ public: // Public functions
     // from the current buffer index without
     // circling back around
 
-    std::size_t                                 remainingContiguousSpots()const;
-    std::size_t                                 remainingContiguousBytes()const;
+    std::size_t                                         remainingContiguousSpots()const;
+    std::size_t                                         remainingContiguousBytes()const;
 
 
 
@@ -194,22 +195,22 @@ public: // Public functions
     // the iterator has terminated
     // circulating
 
-    bool                                        hasReachedEndOfBuffer()const;
+    bool                                                hasReachedEndOfBuffer()const;
 
 
 
     // Arithmetic operators
 
-    blCircularIterator<blBufferType>&           operator+=(const int& movement);
-    blCircularIterator<blBufferType>&           operator-=(const int& movement);
-    blCircularIterator<blBufferType>&           operator++();
-    blCircularIterator<blBufferType>&           operator--();
-    blCircularIterator<blBufferType>            operator++(int);
-    blCircularIterator<blBufferType>            operator--(int);
-    blCircularIterator<blBufferType>            operator+(const int& movement)const;
-    blCircularIterator<blBufferType>            operator-(const int& movement)const;
+    blCircularIterator<blBufferType,blBufferPtr>&       operator+=(const int& movement);
+    blCircularIterator<blBufferType,blBufferPtr>&       operator-=(const int& movement);
+    blCircularIterator<blBufferType,blBufferPtr>&       operator++();
+    blCircularIterator<blBufferType,blBufferPtr>&       operator--();
+    blCircularIterator<blBufferType,blBufferPtr>        operator++(int);
+    blCircularIterator<blBufferType,blBufferPtr>        operator--(int);
+    blCircularIterator<blBufferType,blBufferPtr>        operator+(const int& movement)const;
+    blCircularIterator<blBufferType,blBufferPtr>        operator-(const int& movement)const;
 
-    std::ptrdiff_t                              operator-(const blCircularIterator<blBufferType>& circularIterator)const;
+    std::ptrdiff_t                                      operator-(const blCircularIterator<blBufferType,blBufferPtr>& circularIterator)const;
 
 
 
@@ -217,7 +218,7 @@ public: // Public functions
     // distance in the buffer between
     // this iterator and another one
 
-    std::ptrdiff_t                              actualDistanceInTheBufferFromAnotherIterator(const blCircularIterator<blBufferType>& iterator);
+    std::ptrdiff_t                                      actualDistanceInTheBufferFromAnotherIterator(const blCircularIterator<blBufferType,blBufferPtr>& iterator);
 
 
 
@@ -226,7 +227,7 @@ public: // Public functions
     // to the location it started
     // counting from
 
-    void                                        reset();
+    void                                                reset();
 
 
 
@@ -235,7 +236,7 @@ public: // Public functions
     // want to use the the overload
     // arithmetic operators
 
-    blCircularIterator<blBufferType>&           advance(const std::ptrdiff_t& movement);
+    blCircularIterator<blBufferType,blBufferPtr>&       advance(const std::ptrdiff_t& movement);
 
 
 
@@ -244,20 +245,20 @@ public: // Public functions
     // circulations
     // For example if advancing
     // circulations by 1, the iterator
-    // is advanced by m_buffer.size()
+    // is advanced by m_bufferPtr->size()
     // of if advancing by -2, the
     // iterator is advanced by
-    // -2*m_buffer.size()
+    // -2*m_bufferPtr->size()
 
-    blCircularIterator<blBufferType>&           advanceCirculations(const std::ptrdiff_t& numberOfCirculationsToAdvanceTheIteratorBy);
+    blCircularIterator<blBufferType,blBufferPtr>&       advanceCirculations(const std::ptrdiff_t& numberOfCirculationsToAdvanceTheIteratorBy);
 
 
 
-    // Function used to get the
-    // reference to the data buffer
+    // Functions used to get/set
+    // the buffer pointer
 
-    blBufferType&                               getBufferReference();
-    blBufferType&                               getBufferReference()const;
+    const blBufferPtr&                                  getBufferPtr()const;
+    void                                                setBufferPtr(const blBufferPtr& bufferPtr);
 
 
 
@@ -265,21 +266,21 @@ public: // Public functions
     // or reference to the indexed data
     // point in the buffer
 
-    blDataTypePtr                               getPointerToIndexedDataPoint();
-    const blDataTypePtr                         getPointerToIndexedDataPoint()const;
+    blDataPtr                                           getPointerToIndexedDataPoint();
+    const blDataPtr                                     getPointerToIndexedDataPoint()const;
 
-    blDataType&                                 getReferenceToIndexedDataPoint();
-    const blDataType&                           getReferenceToIndexedDataPoint()const;
+    blDataType&                                         getReferenceToIndexedDataPoint();
+    const blDataType&                                   getReferenceToIndexedDataPoint()const;
 
 
 
     // Functions used to get the
     // current data index
 
-    const std::ptrdiff_t&                       getDataIndex()const;
-    const std::ptrdiff_t&                       getStartIndex()const;
-    const std::ptrdiff_t&                       getCurrentNumberOfCirculations()const;
-    const std::ptrdiff_t&                       getMaxNumberOfCirculations()const;
+    const std::ptrdiff_t&                               getDataIndex()const;
+    const std::ptrdiff_t&                               getStartIndex()const;
+    const std::ptrdiff_t&                               getCurrentNumberOfCirculations()const;
+    const std::ptrdiff_t&                               getMaxNumberOfCirculations()const;
 
 
 
@@ -288,7 +289,7 @@ public: // Public functions
     // essentially resetting the
     // current number of circulations
 
-    void                                        setDataIndex(const int& dataIndex);
+    void                                                setDataIndex(const int& dataIndex);
 
 
 
@@ -296,7 +297,7 @@ public: // Public functions
     // total amount of iterated length
     // including circulations
 
-    std::ptrdiff_t                              getTotalIteratedLength()const;
+    std::ptrdiff_t                                      getTotalIteratedLength()const;
 
 
 
@@ -305,10 +306,10 @@ public: // Public functions
 
     // Dereferencing operators
 
-    blDataType&                                 operator*();
-    const blDataType&                           operator*()const;
-    blDataTypePtr                               operator->();
-    const blDataTypePtr                         operator->()const;
+    blDataType&                                         operator*();
+    const blDataType&                                   operator*()const;
+    blDataPtr                                           operator->();
+    const blDataPtr                                     operator->()const;
 
 
 
@@ -321,7 +322,7 @@ protected: // Protected functions
     // the iterator has gone through up
     // to this instant
 
-    void                                        updateCurrentNumberOfCirculations();
+    void                                                updateCurrentNumberOfCirculations();
 
 
 
@@ -332,21 +333,21 @@ protected: // Protected variables
     // The reference to the
     // data buffer
 
-    blBufferType&                               m_buffer;
+    blBufferPtr                                         m_bufferPtr;
 
 
 
     // Buffer index used to point
     // somewhere inside the buffer
 
-    std::ptrdiff_t                              m_dataIndex;
+    std::ptrdiff_t                                      m_dataIndex;
 
 
 
     // Index where the iterator
     // started iterating from
 
-    std::ptrdiff_t                              m_startIndex;
+    std::ptrdiff_t                                      m_startIndex;
 
 
 
@@ -355,7 +356,7 @@ protected: // Protected variables
     // the iterator has gone through
     // up to this instant
 
-    std::ptrdiff_t                              m_currentNumberOfCirculations;
+    std::ptrdiff_t                                      m_currentNumberOfCirculations;
 
 
 
@@ -369,7 +370,7 @@ protected: // Protected variables
     // to reach the "end" iterator at some
     // point
 
-    std::ptrdiff_t                              m_maxNumberOfCirculations;
+    std::ptrdiff_t                                      m_maxNumberOfCirculations;
 };
 //-------------------------------------------------------------------
 
@@ -378,12 +379,15 @@ protected: // Protected variables
 //-------------------------------------------------------------------
 // Constructors
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline blCircularIterator<blBufferType>::blCircularIterator(blBufferType& buffer,
-                                                  const std::ptrdiff_t& dataIndex,
-                                                  const std::ptrdiff_t& maxNumberOfCirculations)
-                                                  : m_buffer(buffer)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr>::blCircularIterator(const blBufferPtr& bufferPtr,
+                                                                        const std::ptrdiff_t& dataIndex,
+                                                                        const std::ptrdiff_t& maxNumberOfCirculations)
 {
+    m_bufferPtr = bufferPtr;
+
     setDataIndex(dataIndex);
 
     m_maxNumberOfCirculations = maxNumberOfCirculations;
@@ -391,10 +395,12 @@ inline blCircularIterator<blBufferType>::blCircularIterator(blBufferType& buffer
 
 
 
-template<typename blBufferType>
-inline blCircularIterator<blBufferType>::blCircularIterator(const blCircularIterator<blBufferType>& circularIterator)
-                                                            : m_buffer(circularIterator.getBufferReference())
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr>::blCircularIterator(const blCircularIterator<blBufferType,blBufferPtr>& circularIterator)
 {
+    m_bufferPtr = circularIterator.getBufferPtr();
     m_dataIndex = circularIterator.getDataIndex();
     m_startIndex = circularIterator.getStartIndex();
     m_currentNumberOfCirculations = circularIterator.getCurrentNumberOfCirculations();
@@ -407,8 +413,10 @@ inline blCircularIterator<blBufferType>::blCircularIterator(const blCircularIter
 //-------------------------------------------------------------------
 // Destructor
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline blCircularIterator<blBufferType>::~blCircularIterator()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr>::~blCircularIterator()
 {
 }
 //-------------------------------------------------------------------
@@ -419,32 +427,40 @@ inline blCircularIterator<blBufferType>::~blCircularIterator()
 // Operators that let us use this class as
 // a normal iterator in stl-like algorithms
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline typename blCircularIterator<blBufferType>::blDataType& blCircularIterator<blBufferType>::operator*()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline typename blCircularIterator<blBufferType,blBufferPtr>::blDataType& blCircularIterator<blBufferType,blBufferPtr>::operator*()
 {
     return this->getReferenceToIndexedDataPoint();
 }
 
 
 
-template<typename blBufferType>
-inline const typename blCircularIterator<blBufferType>::blDataType& blCircularIterator<blBufferType>::operator*()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const typename blCircularIterator<blBufferType,blBufferPtr>::blDataType& blCircularIterator<blBufferType,blBufferPtr>::operator*()const
 {
     return this->getReferenceToIndexedDataPoint();
 }
 
 
 
-template<typename blBufferType>
-inline typename blCircularIterator<blBufferType>::blDataTypePtr blCircularIterator<blBufferType>::operator->()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline typename blCircularIterator<blBufferType,blBufferPtr>::blDataPtr blCircularIterator<blBufferType,blBufferPtr>::operator->()
 {
     return this->getPointerToIndexedDataPoint();
 }
 
 
 
-template<typename blBufferType>
-inline const typename blCircularIterator<blBufferType>::blDataTypePtr blCircularIterator<blBufferType>::operator->()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const typename blCircularIterator<blBufferType,blBufferPtr>::blDataPtr blCircularIterator<blBufferType,blBufferPtr>::operator->()const
 {
     return this->getPointerToIndexedDataPoint();
 }
@@ -455,18 +471,22 @@ inline const typename blCircularIterator<blBufferType>::blDataTypePtr blCircular
 //-------------------------------------------------------------------
 // Comparator operators
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline bool blCircularIterator<blBufferType>::operator==(const blCircularIterator<blBufferType>& circularIterator)const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline bool blCircularIterator<blBufferType,blBufferPtr>::operator==(const blCircularIterator<blBufferType,blBufferPtr>& circularIterator)const
 {
-    return (this->getTotalIteratedLength() == circularIterator.getTotalIteratedLength());
+    return ( this->getPointerToIndexedDataPoint() == circularIterator.getPointerToIndexedDataPoint() );
 }
 
 
 
-template<typename blBufferType>
-inline bool blCircularIterator<blBufferType>::operator!=(const blCircularIterator<blBufferType>& circularIterator)const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline bool blCircularIterator<blBufferType,blBufferPtr>::operator!=(const blCircularIterator<blBufferType,blBufferPtr>& circularIterator)const
 {
-    return (this->getTotalIteratedLength() != circularIterator.getTotalIteratedLength());
+    return ( this->getPointerToIndexedDataPoint() != circularIterator.getPointerToIndexedDataPoint() );
 }
 //-------------------------------------------------------------------
 
@@ -475,8 +495,10 @@ inline bool blCircularIterator<blBufferType>::operator!=(const blCircularIterato
 //-------------------------------------------------------------------
 // Function returning the iterator's base
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline blCircularIterator<blBufferType> blCircularIterator<blBufferType>::base()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr> blCircularIterator<blBufferType,blBufferPtr>::base()
 {
     return (*this);
 }
@@ -494,18 +516,22 @@ inline blCircularIterator<blBufferType> blCircularIterator<blBufferType>::base()
 // from the current buffer index without
 // circling back around
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline std::size_t blCircularIterator<blBufferType>::remainingContiguousSpots()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline std::size_t blCircularIterator<blBufferType,blBufferPtr>::remainingContiguousSpots()const
 {
-    return this->m_buffer.size() - circ_index(this->m_dataIndex,this->m_buffer.size());
+    return this->m_bufferPtr->size() - circ_index(this->m_dataIndex,this->m_bufferPtr->size());
 }
 
 
 
-template<typename blBufferType>
-inline std::size_t blCircularIterator<blBufferType>::remainingContiguousBytes()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline std::size_t blCircularIterator<blBufferType,blBufferPtr>::remainingContiguousBytes()const
 {
-    return sizeof(blDataType) * (this->m_buffer.size() - circ_index(this->m_dataIndex,m_buffer.size()));
+    return sizeof(blDataType) * (this->m_bufferPtr->size() - circ_index(this->m_dataIndex,m_bufferPtr->size()));
 }
 //-------------------------------------------------------------------
 
@@ -515,8 +541,10 @@ inline std::size_t blCircularIterator<blBufferType>::remainingContiguousBytes()c
 // Function used to ask whether the iterator
 // has reached the buffer's end
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline bool blCircularIterator<blBufferType>::hasReachedEndOfBuffer()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline bool blCircularIterator<blBufferType,blBufferPtr>::hasReachedEndOfBuffer()const
 {
     return (std::abs(this->m_currentNumberOfCirculations) >= m_maxNumberOfCirculations && m_maxNumberOfCirculations >= 0);
 }
@@ -527,8 +555,10 @@ inline bool blCircularIterator<blBufferType>::hasReachedEndOfBuffer()const
 //-------------------------------------------------------------------
 // Arithmetic operators
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline blCircularIterator<blBufferType>& blCircularIterator<blBufferType>::operator+=(const int& movement)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr>& blCircularIterator<blBufferType,blBufferPtr>::operator+=(const int& movement)
 {
     m_dataIndex += movement;
 
@@ -539,8 +569,10 @@ inline blCircularIterator<blBufferType>& blCircularIterator<blBufferType>::opera
 
 
 
-template<typename blBufferType>
-inline blCircularIterator<blBufferType>& blCircularIterator<blBufferType>::operator-=(const int& movement)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr>& blCircularIterator<blBufferType,blBufferPtr>::operator-=(const int& movement)
 {
     m_dataIndex -= movement;
 
@@ -551,8 +583,10 @@ inline blCircularIterator<blBufferType>& blCircularIterator<blBufferType>::opera
 
 
 
-template<typename blBufferType>
-inline blCircularIterator<blBufferType>& blCircularIterator<blBufferType>::operator++()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr>& blCircularIterator<blBufferType,blBufferPtr>::operator++()
 {
     ++m_dataIndex;
 
@@ -563,8 +597,10 @@ inline blCircularIterator<blBufferType>& blCircularIterator<blBufferType>::opera
 
 
 
-template<typename blBufferType>
-inline blCircularIterator<blBufferType>& blCircularIterator<blBufferType>::operator--()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr>& blCircularIterator<blBufferType,blBufferPtr>::operator--()
 {
     --m_dataIndex;
 
@@ -575,8 +611,10 @@ inline blCircularIterator<blBufferType>& blCircularIterator<blBufferType>::opera
 
 
 
-template<typename blBufferType>
-inline blCircularIterator<blBufferType> blCircularIterator<blBufferType>::operator++(int)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr> blCircularIterator<blBufferType,blBufferPtr>::operator++(int)
 {
     auto temp(*this);
 
@@ -589,8 +627,10 @@ inline blCircularIterator<blBufferType> blCircularIterator<blBufferType>::operat
 
 
 
-template<typename blBufferType>
-inline blCircularIterator<blBufferType> blCircularIterator<blBufferType>::operator--(int)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr> blCircularIterator<blBufferType,blBufferPtr>::operator--(int)
 {
     auto temp(*this);
 
@@ -603,8 +643,10 @@ inline blCircularIterator<blBufferType> blCircularIterator<blBufferType>::operat
 
 
 
-template<typename blBufferType>
-inline blCircularIterator<blBufferType> blCircularIterator<blBufferType>::operator+(const int& movement)const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr> blCircularIterator<blBufferType,blBufferPtr>::operator+(const int& movement)const
 {
     auto temp(*this);
 
@@ -615,8 +657,10 @@ inline blCircularIterator<blBufferType> blCircularIterator<blBufferType>::operat
 
 
 
-template<typename blBufferType>
-inline blCircularIterator<blBufferType> blCircularIterator<blBufferType>::operator-(const int& movement)const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr> blCircularIterator<blBufferType,blBufferPtr>::operator-(const int& movement)const
 {
     auto temp(*this);
 
@@ -627,8 +671,10 @@ inline blCircularIterator<blBufferType> blCircularIterator<blBufferType>::operat
 
 
 
-template<typename blBufferType>
-inline std::ptrdiff_t blCircularIterator<blBufferType>::operator-(const blCircularIterator<blBufferType>& circularIterator)const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline std::ptrdiff_t blCircularIterator<blBufferType,blBufferPtr>::operator-(const blCircularIterator<blBufferType,blBufferPtr>& circularIterator)const
 {
     return ( m_dataIndex - circularIterator.getDataIndex() );
 }
@@ -641,11 +687,13 @@ inline std::ptrdiff_t blCircularIterator<blBufferType>::operator-(const blCircul
 // distance in the buffer between
 // this iterator and another one
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline std::ptrdiff_t blCircularIterator<blBufferType>::actualDistanceInTheBufferFromAnotherIterator(const blCircularIterator<blBufferType>& iterator)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline std::ptrdiff_t blCircularIterator<blBufferType,blBufferPtr>::actualDistanceInTheBufferFromAnotherIterator(const blCircularIterator<blBufferType,blBufferPtr>& iterator)
 {
     return (
-            static_cast<std::ptrdiff_t>( circ_index(this->m_dataIndex,this->m_buffer.size()) ) -
+            static_cast<std::ptrdiff_t>( circ_index(this->m_dataIndex,this->m_bufferPtr->size()) ) -
             static_cast<std::ptrdiff_t>( circ_index(iterator.getDataIndex(),iterator.getBufferReference().size()) )
            );
 }
@@ -659,8 +707,10 @@ inline std::ptrdiff_t blCircularIterator<blBufferType>::actualDistanceInTheBuffe
 // to the location it started
 // counting from
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline void blCircularIterator<blBufferType>::reset()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline void blCircularIterator<blBufferType,blBufferPtr>::reset()
 {
     this->setDataIndex(this->m_startIndex);
 }
@@ -672,8 +722,10 @@ inline void blCircularIterator<blBufferType>::reset()
 // Function used to advance the iterator if the user doesn't
 // want to use the the overload arithmetic operators
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline blCircularIterator<blBufferType>& blCircularIterator<blBufferType>::advance(const std::ptrdiff_t& movement)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr>& blCircularIterator<blBufferType,blBufferPtr>::advance(const std::ptrdiff_t& movement)
 {
     m_dataIndex += movement;
 
@@ -688,14 +740,16 @@ inline blCircularIterator<blBufferType>& blCircularIterator<blBufferType>::advan
 //-------------------------------------------------------------------
 // Function used to advance the iterator by number of
 // circulations.  For example if advancing circulations
-// by 1, the iterator is advanced by m_buffer.size(), or
+// by 1, the iterator is advanced by m_bufferPtr->size(), or
 // if advancing by -2, the iterator is advanced by
-// -2*m_buffer.size()
+// -2*m_bufferPtr->size()
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline blCircularIterator<blBufferType>& blCircularIterator<blBufferType>::advanceCirculations(const std::ptrdiff_t& numberOfCirculationsToAdvanceTheIteratorBy)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blCircularIterator<blBufferType,blBufferPtr>& blCircularIterator<blBufferType,blBufferPtr>::advanceCirculations(const std::ptrdiff_t& numberOfCirculationsToAdvanceTheIteratorBy)
 {
-    m_dataIndex += numberOfCirculationsToAdvanceTheIteratorBy * this->m_buffer.size();
+    m_dataIndex += numberOfCirculationsToAdvanceTheIteratorBy * this->m_bufferPtr->size();
 
     updateCurrentNumberOfCirculations();
 
@@ -708,50 +762,66 @@ inline blCircularIterator<blBufferType>& blCircularIterator<blBufferType>::advan
 //-------------------------------------------------------------------
 // Functions used to get this iterator's members
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline const std::ptrdiff_t& blCircularIterator<blBufferType>::getDataIndex()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const std::ptrdiff_t& blCircularIterator<blBufferType,blBufferPtr>::getDataIndex()const
 {
     return m_dataIndex;
 }
 
 
 
-template<typename blBufferType>
-inline const std::ptrdiff_t& blCircularIterator<blBufferType>::getStartIndex()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const std::ptrdiff_t& blCircularIterator<blBufferType,blBufferPtr>::getStartIndex()const
 {
     return m_startIndex;
 }
 
 
 
-template<typename blBufferType>
-inline const std::ptrdiff_t& blCircularIterator<blBufferType>::getCurrentNumberOfCirculations()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const std::ptrdiff_t& blCircularIterator<blBufferType,blBufferPtr>::getCurrentNumberOfCirculations()const
 {
     return m_currentNumberOfCirculations;
 }
 
 
 
-template<typename blBufferType>
-inline const std::ptrdiff_t& blCircularIterator<blBufferType>::getMaxNumberOfCirculations()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const std::ptrdiff_t& blCircularIterator<blBufferType,blBufferPtr>::getMaxNumberOfCirculations()const
 {
     return m_maxNumberOfCirculations;
 }
+//-------------------------------------------------------------------
 
 
 
-template<typename blBufferType>
-inline blBufferType& blCircularIterator<blBufferType>::getBufferReference()
+//-------------------------------------------------------------------
+// Functions used to get/set the buffer pointer
+//-------------------------------------------------------------------
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const blBufferPtr& blCircularIterator<blBufferType,blBufferPtr>::getBufferPtr()const
 {
-    return m_buffer;
+    return m_bufferPtr;
 }
 
 
 
-template<typename blBufferType>
-inline blBufferType& blCircularIterator<blBufferType>::getBufferReference()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline void blCircularIterator<blBufferType,blBufferPtr>::setBufferPtr(const blBufferPtr& bufferPtr)
 {
-    return m_buffer;
+    m_bufferPtr = bufferPtr;
 }
 //-------------------------------------------------------------------
 
@@ -762,10 +832,12 @@ inline blBufferType& blCircularIterator<blBufferType>::getBufferReference()const
 // number of circulations/cycles that the
 // iterator has gone through up to now
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline void blCircularIterator<blBufferType>::updateCurrentNumberOfCirculations()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline void blCircularIterator<blBufferType,blBufferPtr>::updateCurrentNumberOfCirculations()
 {
-    m_currentNumberOfCirculations = (m_dataIndex - m_startIndex) / std::ptrdiff_t(m_buffer.size());
+    m_currentNumberOfCirculations = (m_dataIndex - m_startIndex) / std::ptrdiff_t(m_bufferPtr->size());
 }
 //-------------------------------------------------------------------
 
@@ -776,8 +848,10 @@ inline void blCircularIterator<blBufferType>::updateCurrentNumberOfCirculations(
 // pointer to the indexed data point in the
 // buffer
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline typename blCircularIterator<blBufferType>::blDataType& blCircularIterator<blBufferType>::getReferenceToIndexedDataPoint()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline typename blCircularIterator<blBufferType,blBufferPtr>::blDataType& blCircularIterator<blBufferType,blBufferPtr>::getReferenceToIndexedDataPoint()
 {
     // If the max number of circulations
     // has been passed, then we return the
@@ -788,19 +862,17 @@ inline typename blCircularIterator<blBufferType>::blDataType& blCircularIterator
     // is negative, we never stop
 
     if(this->hasReachedEndOfBuffer())
-    {
-        return this->m_buffer[m_buffer.size()];
-    }
-    else
-    {
-        return this->m_buffer[this->circ_index(m_dataIndex,this->m_buffer.size())];
-    }
+        return (*this->m_bufferPtr)[m_bufferPtr->size()];
+
+    return (*this->m_bufferPtr)[this->circ_index(m_dataIndex,this->m_bufferPtr->size())];
 }
 
 
 
-template<typename blBufferType>
-inline const typename blCircularIterator<blBufferType>::blDataType& blCircularIterator<blBufferType>::getReferenceToIndexedDataPoint()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const typename blCircularIterator<blBufferType,blBufferPtr>::blDataType& blCircularIterator<blBufferType,blBufferPtr>::getReferenceToIndexedDataPoint()const
 {
     // If the max number of circulations
     // has been passed, then we return the
@@ -811,19 +883,17 @@ inline const typename blCircularIterator<blBufferType>::blDataType& blCircularIt
     // is negative, we never stop
 
     if(this->hasReachedEndOfBuffer())
-    {
-        return this->m_buffer[m_buffer.size()];
-    }
-    else
-    {
-        return this->m_buffer[this->circ_index(m_dataIndex,this->m_buffer.size())];
-    }
+        return (*this->m_bufferPtr)[m_bufferPtr->size()];
+
+    return (*this->m_bufferPtr)[this->circ_index(m_dataIndex,this->m_bufferPtr->size())];
 }
 
 
 
-template<typename blBufferType>
-inline typename blCircularIterator<blBufferType>::blDataTypePtr blCircularIterator<blBufferType>::getPointerToIndexedDataPoint()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline typename blCircularIterator<blBufferType,blBufferPtr>::blDataPtr blCircularIterator<blBufferType,blBufferPtr>::getPointerToIndexedDataPoint()
 {
     // If the max number of circulations
     // has been passed, then we return the
@@ -833,20 +903,21 @@ inline typename blCircularIterator<blBufferType>::blDataTypePtr blCircularIterat
     // If the max number of circulations
     // is negative, we never stop
 
+    if(!this->m_bufferPtr)
+        return blDataPtr(nullptr);
+
     if(this->hasReachedEndOfBuffer())
-    {
-        return &this->m_buffer[m_buffer.size()];
-    }
-    else
-    {
-        return &this->m_buffer[this->circ_index(m_dataIndex,this->m_buffer.size())];
-    }
+        return blDataPtr(&(*this->m_bufferPtr)[m_bufferPtr->size()]);
+
+    return blDataPtr(&(*this->m_bufferPtr)[this->circ_index(m_dataIndex,this->m_bufferPtr->size())]);
 }
 
 
 
-template<typename blBufferType>
-inline const typename blCircularIterator<blBufferType>::blDataTypePtr blCircularIterator<blBufferType>::getPointerToIndexedDataPoint()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const typename blCircularIterator<blBufferType,blBufferPtr>::blDataPtr blCircularIterator<blBufferType,blBufferPtr>::getPointerToIndexedDataPoint()const
 {
     // If the max number of circulations
     // has been passed, then we return the
@@ -856,14 +927,13 @@ inline const typename blCircularIterator<blBufferType>::blDataTypePtr blCircular
     // If the max number of circulations
     // is negative, we never stop
 
+    if(!this->m_bufferPtr)
+        return blDataPtr(nullptr);
+
     if(this->hasReachedEndOfBuffer())
-    {
-        return &m_buffer[m_buffer.size()];
-    }
-    else
-    {
-        return &this->m_buffer[this->circ_index(m_dataIndex,this->m_buffer.size())];
-    }
+        return blDataPtr(&(*this->m_bufferPtr)[m_bufferPtr->size()]);
+
+    return blDataPtr(&(*this->m_bufferPtr)[this->circ_index(m_dataIndex,this->m_bufferPtr->size())]);
 }
 //-------------------------------------------------------------------
 
@@ -874,8 +944,10 @@ inline const typename blCircularIterator<blBufferType>::blDataTypePtr blCircular
 // data index, essentially resetting
 // the current number of circulations
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline void blCircularIterator<blBufferType>::setDataIndex(const int& dataIndex)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline void blCircularIterator<blBufferType,blBufferPtr>::setDataIndex(const int& dataIndex)
 {
     m_dataIndex = dataIndex;
 
@@ -892,10 +964,28 @@ inline void blCircularIterator<blBufferType>::setDataIndex(const int& dataIndex)
 // total amount of iterated length
 // including circulations
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline std::ptrdiff_t blCircularIterator<blBufferType>::getTotalIteratedLength()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline std::ptrdiff_t blCircularIterator<blBufferType,blBufferPtr>::getTotalIteratedLength()const
 {
     return this->m_dataIndex - this->m_startIndex;
+}
+//-------------------------------------------------------------------
+
+
+
+//-------------------------------------------------------------------
+// Output circular iterator address to output stream
+//-------------------------------------------------------------------
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline std::ostream& operator<<(std::ostream& os,const blCircularIterator<blBufferType,blBufferPtr>& circularIterator)
+{
+    os << circularIterator.getPointerToIndexedDataPoint();
+
+    return os;
 }
 //-------------------------------------------------------------------
 

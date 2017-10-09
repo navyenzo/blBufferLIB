@@ -80,9 +80,12 @@ namespace blBufferLIB
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr = blDataType*,
+         typename blBufferPtr = blBuffer_2<blDataType,blDataPtr>*,
+         typename blBufferRoiPtr = blBuffer_4<blDataType,blDataPtr,blBufferPtr>*>
 
-class blBuffer : public blBuffer_8<blDataType>
+class blBuffer : public blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>
 {
 public: // Constructors and destructors
 
@@ -96,7 +99,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blBuffer(const blBuffer<blDataType>& buffer);
+    blBuffer(const blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer);
 
 
 
@@ -109,8 +112,12 @@ public: // Constructors and destructors
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blBuffer<blDataType>::blBuffer() : blBuffer_8<blDataType>()
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
+
+inline blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer() : blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>()
 {
 }
 //-------------------------------------------------------------------
@@ -118,8 +125,13 @@ inline blBuffer<blDataType>::blBuffer() : blBuffer_8<blDataType>()
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blBuffer<blDataType>::blBuffer(const blBuffer<blDataType>& buffer) : blBuffer_8<blDataType>(buffer)
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
+
+inline blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer(const blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer)
+                                                                           : blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>(buffer)
 {
 }
 //-------------------------------------------------------------------
@@ -127,10 +139,68 @@ inline blBuffer<blDataType>::blBuffer(const blBuffer<blDataType>& buffer) : blBu
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blBuffer<blDataType>::~blBuffer()
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
+
+inline blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::~blBuffer()
 {
 }
+//-------------------------------------------------------------------
+
+
+
+//-------------------------------------------------------------------
+// Aliases useful for certain applications
+//-------------------------------------------------------------------
+
+// Alias using boost::offset_ptr
+// useful in using blBuffer in
+// shared memory interprocess
+// communication applications
+
+#ifdef BOOST_INTERPROCESS_OFFSET_PTR_HPP
+
+
+
+template<
+         typename blDataType,
+         typename blDataPtr = boost::interprocess::offset_ptr<blDataType>,
+         typename blBufferPtr = boost::interprocess::offset_ptr< blBuffer_2<blDataType,blDataPtr> >,
+         typename blBufferRoiPtr = boost::interprocess::offset_ptr< blBuffer_4<blDataType,blDataPtr,blBufferPtr> >
+        >
+
+class blSharedMemoryBuffer : public blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>
+{
+public:
+
+
+
+    blSharedMemoryBuffer() : blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>()
+    {
+    }
+
+
+
+    blSharedMemoryBuffer(const blSharedMemoryBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& sharedMemoryBuffer)
+                         : blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>(sharedMemoryBuffer)
+    {
+    }
+
+
+
+    ~blSharedMemoryBuffer()
+    {
+    }
+};
+
+
+
+#endif
+
+
+
 //-------------------------------------------------------------------
 
 

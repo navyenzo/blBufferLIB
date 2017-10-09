@@ -64,9 +64,11 @@ namespace blBufferLIB
 //-------------------------------------------------------------------
 // class blBuffer_4 declaration
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 
-class blBuffer_4 : public blBuffer_3<blDataType>
+class blBuffer_4 : public blBuffer_3<blDataType,blDataPtr,blBufferPtr>
 {
 public: // Constructors and destructors
 
@@ -80,7 +82,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blBuffer_4(const blBuffer_4<blDataType>& buffer0) = default;
+    blBuffer_4(const blBuffer_4<blDataType,blDataPtr,blBufferPtr>& buffer0) = default;
 
 
 
@@ -96,7 +98,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_4<blDataType>&                 operator=(const blBuffer_4<blDataType>& buffer0) = default;
+    blBuffer_4<blDataType,blDataPtr,blBufferPtr>&           operator=(const blBuffer_4<blDataType,blDataPtr,blBufferPtr>& buffer0) = default;
 
 
 
@@ -106,8 +108,8 @@ public: // Public functions
 
     // The get/set functions for the ROI
 
-    blDimensionalProperties&                roi();
-    const blDimensionalProperties&          roi()const;
+    blDimensionalProperties&                                roi();
+    const blDimensionalProperties&                          roi()const;
 
 
 
@@ -115,7 +117,7 @@ public: // Public functions
     // ROI so that it points to
     // the entire buffer
 
-    void                                    resetROI();
+    void                                                    resetROI();
 
 
 
@@ -124,28 +126,28 @@ public: // Public functions
     // do not check for out of bound indexes
 
     template<typename blIntegerType>
-    blDataType&                             roi_at(const blIntegerType& dataIndex);
+    blDataType&                                             roi_at(const blIntegerType& dataIndex);
 
     template<typename blIntegerType>
-    const blDataType&                       roi_at(const blIntegerType& dataIndex)const;
+    const blDataType&                                       roi_at(const blIntegerType& dataIndex)const;
 
     template<typename blIntegerType>
-    blDataType&                             roi_at(const blIntegerType& rowIndex,
-                                                   const blIntegerType& colIndex);
+    blDataType&                                             roi_at(const blIntegerType& rowIndex,
+                                                                   const blIntegerType& colIndex);
 
     template<typename blIntegerType>
-    const blDataType&                       roi_at(const blIntegerType& rowIndex,
-                                                   const blIntegerType& colIndex)const;
+    const blDataType&                                       roi_at(const blIntegerType& rowIndex,
+                                                                   const blIntegerType& colIndex)const;
 
     template<typename blIntegerType>
-    blDataType&                             roi_at(const blIntegerType& rowIndex,
-                                                   const blIntegerType& colIndex,
-                                                   const blIntegerType& pageIndex);
+    blDataType&                                             roi_at(const blIntegerType& rowIndex,
+                                                                   const blIntegerType& colIndex,
+                                                                   const blIntegerType& pageIndex);
 
     template<typename blIntegerType>
-    const blDataType&                       roi_at(const blIntegerType& rowIndex,
-                                                   const blIntegerType& colIndex,
-                                                   const blIntegerType& pageIndex)const;
+    const blDataType&                                       roi_at(const blIntegerType& rowIndex,
+                                                                   const blIntegerType& colIndex,
+                                                                   const blIntegerType& pageIndex)const;
 
 
 
@@ -153,22 +155,22 @@ public: // Public functions
     // at functions
 
     template<typename...Indexes>
-    blDataType&                             roi_at(const Indexes&...dataIndexes);
+    blDataType&                                             roi_at(const Indexes&...dataIndexes);
 
     template<typename...Indexes>
-    const blDataType&                       roi_at(const Indexes&...dataIndexes)const;
+    const blDataType&                                       roi_at(const Indexes&...dataIndexes)const;
 
     template<typename blIntegerType>
-    blDataType&                             roi_at(const std::initializer_list<blIntegerType>& dataIndexes);
+    blDataType&                                             roi_at(const std::initializer_list<blIntegerType>& dataIndexes);
 
     template<typename blIntegerType>
-    const blDataType&                       roi_at(const std::initializer_list<blIntegerType>& dataIndexes)const;
+    const blDataType&                                       roi_at(const std::initializer_list<blIntegerType>& dataIndexes)const;
 
     template<typename blIntegerType>
-    blDataType&                             roi_at(const std::vector<blIntegerType>& dataIndexes);
+    blDataType&                                             roi_at(const std::vector<blIntegerType>& dataIndexes);
 
     template<typename blIntegerType>
-    const blDataType&                       roi_at(const std::vector<blIntegerType>& dataIndexes)const;
+    const blDataType&                                       roi_at(const std::vector<blIntegerType>& dataIndexes)const;
 
 
 
@@ -179,7 +181,7 @@ protected: // Protected variables
 
     // The ROI
 
-    blDimensionalProperties                 m_roi;
+    blDimensionalProperties                                 m_roi;
 };
 //-------------------------------------------------------------------
 
@@ -188,8 +190,11 @@ protected: // Protected variables
 //-------------------------------------------------------------------
 // Default constructor
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blBuffer_4<blDataType>::blBuffer_4() : blBuffer_3<blDataType>()
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
+
+inline blBuffer_4<blDataType,blDataPtr,blBufferPtr>::blBuffer_4() : blBuffer_3<blDataType,blDataPtr,blBufferPtr>()
 {
 }
 //-------------------------------------------------------------------
@@ -199,8 +204,11 @@ inline blBuffer_4<blDataType>::blBuffer_4() : blBuffer_3<blDataType>()
 //-------------------------------------------------------------------
 // Destructor
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blBuffer_4<blDataType>::~blBuffer_4()
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
+
+inline blBuffer_4<blDataType,blDataPtr,blBufferPtr>::~blBuffer_4()
 {
 }
 //-------------------------------------------------------------------
@@ -210,16 +218,22 @@ inline blBuffer_4<blDataType>::~blBuffer_4()
 //-------------------------------------------------------------------
 // Get/Set functions for the ROI
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blDimensionalProperties& blBuffer_4<blDataType>::roi()
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
+
+inline blDimensionalProperties& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi()
 {
     return m_roi;
 }
 
 
 
-template<typename blDataType>
-inline const blDimensionalProperties& blBuffer_4<blDataType>::roi()const
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
+
+inline const blDimensionalProperties& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi()const
 {
     return m_roi;
 }
@@ -232,8 +246,11 @@ inline const blDimensionalProperties& blBuffer_4<blDataType>::roi()const
 // so that it points to the entire
 // buffer
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline void blBuffer_4<blDataType>::resetROI()
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
+
+inline void blBuffer_4<blDataType,blDataPtr,blBufferPtr>::resetROI()
 {
     m_roi = this->m_properties;
 }
@@ -245,9 +262,12 @@ inline void blBuffer_4<blDataType>::resetROI()
 // "at" functions (These function DO NOT check if the indexes
 //                 are out of bounds)
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 template<typename blIntegerType>
-inline blDataType& blBuffer_4<blDataType>::roi_at(const blIntegerType& dataIndex)
+
+inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const blIntegerType& dataIndex)
 {
     // Vector of indeces used to
     // address the correct data
@@ -260,9 +280,9 @@ inline blDataType& blBuffer_4<blDataType>::roi_at(const blIntegerType& dataIndex
     // Here we calculate the coordinates
     // of the data point in our nd-buffer
 
-    for(std::size_t i = indexes.size() - 1; ; --i)
+    for(int i = static_cast<int>(indexes.size()) - 1; i >= 0 ; --i)
     {
-        if(i == (indexes.size() - 1))
+        if(i == static_cast<int>(indexes.size()) - 1)
         {
             indexes[i] = dataIndex / m_roi.sizeOfSingleUnitInSpecificDimension(i);
         }
@@ -291,9 +311,12 @@ inline blDataType& blBuffer_4<blDataType>::roi_at(const blIntegerType& dataIndex
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 template<typename blIntegerType>
-inline const blDataType& blBuffer_4<blDataType>::roi_at(const blIntegerType& dataIndex)const
+
+inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const blIntegerType& dataIndex)const
 {
     // Vector of indeces used to
     // address the correct data
@@ -306,9 +329,9 @@ inline const blDataType& blBuffer_4<blDataType>::roi_at(const blIntegerType& dat
     // Here we calculate the coordinates
     // of the data point in our nd-buffer
 
-    for(std::size_t i = indexes.size() - 1; ; --i)
+    for(int i = static_cast<int>(indexes.size()) - 1; i >= 0 ; --i)
     {
-        if(i == (indexes.size() - 1))
+        if(i == static_cast<int>(indexes.size()) - 1)
         {
             indexes[i] = dataIndex / m_roi.sizeOfSingleUnitInSpecificDimension(i);
         }
@@ -337,42 +360,54 @@ inline const blDataType& blBuffer_4<blDataType>::roi_at(const blIntegerType& dat
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 template<typename blIntegerType>
-inline blDataType& blBuffer_4<blDataType>::roi_at(const blIntegerType& rowIndex,
-                                                  const blIntegerType& colIndex)
+
+inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const blIntegerType& rowIndex,
+                                                                        const blIntegerType& colIndex)
 {
     return this->at(rowIndex + m_roi.rowOffset(),colIndex + m_roi.colOffset());
 }
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 template<typename blIntegerType>
-inline const blDataType& blBuffer_4<blDataType>::roi_at(const blIntegerType& rowIndex,
-                                                        const blIntegerType& colIndex)const
+
+inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const blIntegerType& rowIndex,
+                                                                              const blIntegerType& colIndex)const
 {
     return this->at(rowIndex + m_roi.rowOffset(),colIndex + m_roi.colOffset());
 }
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 template<typename blIntegerType>
-inline blDataType& blBuffer_4<blDataType>::roi_at(const blIntegerType& rowIndex,
-                                                  const blIntegerType& colIndex,
-                                                  const blIntegerType& pageIndex)
+
+inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const blIntegerType& rowIndex,
+                                                                        const blIntegerType& colIndex,
+                                                                        const blIntegerType& pageIndex)
 {
     return this->at(rowIndex + m_roi.rowOffset(),colIndex + m_roi.colOffset(),pageIndex + m_roi.pageOffset());
 }
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 template<typename blIntegerType>
-inline const blDataType& blBuffer_4<blDataType>::roi_at(const blIntegerType& rowIndex,
-                                                        const blIntegerType& colIndex,
-                                                        const blIntegerType& pageIndex)const
+
+inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const blIntegerType& rowIndex,
+                                                                              const blIntegerType& colIndex,
+                                                                              const blIntegerType& pageIndex)const
 {
     return this->at(rowIndex + m_roi.rowOffset(),colIndex + m_roi.colOffset(),pageIndex + m_roi.pageOffset());
 }
@@ -383,27 +418,36 @@ inline const blDataType& blBuffer_4<blDataType>::roi_at(const blIntegerType& row
 //-------------------------------------------------------------------
 // Generic version of roi_at functions
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 template<typename...Indexes>
-inline blDataType& blBuffer_4<blDataType>::roi_at(const Indexes&...dataIndexes)
+
+inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const Indexes&...dataIndexes)
 {
     return this->roi_at({dataIndexes...});
 }
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 template<typename...Indexes>
-inline const blDataType& blBuffer_4<blDataType>::roi_at(const Indexes&...dataIndexes)const
+
+inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const Indexes&...dataIndexes)const
 {
     return this->roi_at({dataIndexes...});
 }
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 template<typename blIntegerType>
-inline blDataType& blBuffer_4<blDataType>::roi_at(const std::initializer_list<blIntegerType>& dataIndexes)
+
+inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const std::initializer_list<blIntegerType>& dataIndexes)
 {
     std::vector<std::size_t> offsettedDataIndexes(dataIndexes.begin(),dataIndexes.end());
 
@@ -415,9 +459,12 @@ inline blDataType& blBuffer_4<blDataType>::roi_at(const std::initializer_list<bl
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 template<typename blIntegerType>
-inline const blDataType& blBuffer_4<blDataType>::roi_at(const std::initializer_list<blIntegerType>& dataIndexes)const
+
+inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const std::initializer_list<blIntegerType>& dataIndexes)const
 {
     std::vector<std::size_t> offsettedDataIndexes(dataIndexes.begin(),dataIndexes.end());
 
@@ -429,9 +476,12 @@ inline const blDataType& blBuffer_4<blDataType>::roi_at(const std::initializer_l
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 template<typename blIntegerType>
-inline blDataType& blBuffer_4<blDataType>::roi_at(const std::vector<blIntegerType>& dataIndexes)
+
+inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const std::vector<blIntegerType>& dataIndexes)
 {
     std::vector<std::size_t> offsettedDataIndexes(dataIndexes.begin(),dataIndexes.end());
 
@@ -443,9 +493,12 @@ inline blDataType& blBuffer_4<blDataType>::roi_at(const std::vector<blIntegerTyp
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr>
 template<typename blIntegerType>
-inline const blDataType& blBuffer_4<blDataType>::roi_at(const std::vector<blIntegerType>& dataIndexes)const
+
+inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const std::vector<blIntegerType>& dataIndexes)const
 {
     std::vector<std::size_t> offsettedDataIndexes(dataIndexes.begin(),dataIndexes.end());
 

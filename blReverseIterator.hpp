@@ -6,20 +6,35 @@
 //-------------------------------------------------------------------
 // FILE:            blReverseIterator.hpp
 // CLASS:           blReverseIterator
-// BASE CLASS:      None
+//
+//
 //
 // PURPOSE:         -- A simple reverse iterator that moves backwards
 //                     in a contiguous space when "advanced forward" and
-//                     moves backward in a contiguous space when
+//                     moves forward in a contiguous space when
 //                     "advanced backwards", which also works with
 //                     stl-algorthms
+//
+//                  -- This reverse iterator allows the user to choose
+//                     the type of pointer to be used, which is defaulted
+//                     to a raw pointer.
+//                     The user could instead opt to choose an offset_ptr
+//                     from the boost interprocess library to allow the
+//                     use of this reverse iterator in shared memory for
+//                     multi-process applications
+//
+//
 //
 // AUTHOR:          Vincenzo Barbato
 //                  http://www.barbatolabs.com
 //                  navyenzo@gmail.com
 //
+//
+//
 // LISENSE:         MIT-LICENCE
 //                  http://www.opensource.org/licenses/mit-license.php
+//
+//
 //
 // DEPENDENCIES:    <iterator>
 //-------------------------------------------------------------------
@@ -48,7 +63,9 @@ namespace blBufferLIB
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr = blDataType*>
+
 class blReverseIterator
 {
 public: // Iterator traits
@@ -57,8 +74,8 @@ public: // Iterator traits
 
     using iterator_category = std::random_access_iterator_tag;
     using value_type = blDataType;
-    using difference_type = ptrdiff_t;
-    using pointer = blDataType*;
+    using difference_type = std::ptrdiff_t;
+    using pointer = blDataPtr;
     using reference = blDataType&;
 
 
@@ -69,21 +86,19 @@ public: // Constructors and destructors
 
     // Default constructor
 
-    blReverseIterator(blDataType* ptr = nullptr);
+    blReverseIterator(const blDataPtr& ptr = blDataPtr(nullptr));
 
 
 
-    // Constructor from another
-    // type of iterator
+    // Constructor from a value
 
-    template<typename blAnotherTypeOfIterator>
-    blReverseIterator(const blAnotherTypeOfIterator& iter);
+    blReverseIterator(blDataType& value);
 
 
 
     // Copy constructor
 
-    blReverseIterator(const blReverseIterator<blDataType>& reverseIterator);
+    blReverseIterator(const blReverseIterator<blDataType,blDataPtr>& reverseIterator);
 
 
 
@@ -99,24 +114,28 @@ public: // Public functions
 
     // Overloaded assignment operators
 
-    template<typename blAnotherTypeOfIterator>
-    blReverseIterator<blDataType>&              operator=(const blAnotherTypeOfIterator& iter);
-    blReverseIterator<blDataType>&              operator=(const std::nullptr_t& nullPointer);
-    blReverseIterator<blDataType>&              operator=(const blReverseIterator<blDataType>& reverseIterator);
-    blReverseIterator<blDataType>&              operator=(blDataType* ptr);
+    blReverseIterator<blDataType,blDataPtr>&    operator=(const blReverseIterator<blDataType,blDataPtr>& reverseIterator);
+    blReverseIterator<blDataType,blDataPtr>&    operator=(const blDataPtr& ptr);
+
+
+
+    // Comparison operators
+
+    bool                                        operator==(const blReverseIterator<blDataType,blDataPtr>& reverseIterator)const;
+    bool                                        operator!=(const blReverseIterator<blDataType,blDataPtr>& reverseIterator)const;
 
 
 
     // Overloaded assignment operators
 
-    blReverseIterator<blDataType>&              operator+=(const ptrdiff_t& movement);
-    blReverseIterator<blDataType>&              operator-=(const ptrdiff_t& movement);
-    blReverseIterator<blDataType>&              operator++();
-    blReverseIterator<blDataType>&              operator--();
-    blReverseIterator<blDataType>               operator++(int);
-    blReverseIterator<blDataType>               operator--(int);
-    blReverseIterator<blDataType>               operator+(const int& movement)const;
-    blReverseIterator<blDataType>               operator-(const int& movement)const;
+    blReverseIterator<blDataType,blDataPtr>&    operator+=(const ptrdiff_t& movement);
+    blReverseIterator<blDataType,blDataPtr>&    operator-=(const ptrdiff_t& movement);
+    blReverseIterator<blDataType,blDataPtr>&    operator++();
+    blReverseIterator<blDataType,blDataPtr>&    operator--();
+    blReverseIterator<blDataType,blDataPtr>     operator++(int);
+    blReverseIterator<blDataType,blDataPtr>     operator--(int);
+    blReverseIterator<blDataType,blDataPtr>     operator+(const int& movement)const;
+    blReverseIterator<blDataType,blDataPtr>     operator-(const int& movement)const;
 
 
 
@@ -124,13 +143,13 @@ public: // Public functions
     // two pointers (it gives the
     // distance)
 
-    ptrdiff_t                                   operator-(const blReverseIterator<blDataType>& reverseIterator)const;
+    std::ptrdiff_t                              operator-(const blReverseIterator<blDataType,blDataPtr>& reverseIterator)const;
 
 
 
     // Base operator
 
-    blReverseIterator<blDataType>               base();
+    blReverseIterator<blDataType,blDataPtr>     base();
 
 
 
@@ -139,15 +158,14 @@ public: // Public functions
 
     blDataType&                                 operator*();
     const blDataType&                           operator*()const;
-    blDataType*                                 operator->();
+    blDataPtr                                   operator->();
 
 
 
     // Functions to get the
     // raw pointer
 
-    blDataType*                                 getPtr()const;
-    const blDataType*                           getConstPtr()const;
+    const blDataPtr&                            getPtr()const;
 
 
 
@@ -157,7 +175,7 @@ private: // Private variables
 
     // The actual raw pointer
 
-    blDataType*                                 m_ptr;
+    blDataPtr                                   m_ptr;
 };
 //-------------------------------------------------------------------
 
@@ -166,25 +184,30 @@ private: // Private variables
 //-------------------------------------------------------------------
 // Constructors
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blReverseIterator<blDataType>::blReverseIterator(blDataType* ptr)
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr>::blReverseIterator(const blDataPtr& ptr)
 {
-    m_ptr = ptr;
+    m_ptr = blDataPtr(ptr);
 }
 
 
 
-template<typename blDataType>
-template<typename blAnotherTypeOfIterator>
-inline blReverseIterator<blDataType>::blReverseIterator(const blAnotherTypeOfIterator& iter)
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr>::blReverseIterator(blDataType& value)
 {
-    this->m_ptr = &(*iter);
+    m_ptr = blDataPtr(&value);
 }
 
 
 
-template<typename blDataType>
-inline blReverseIterator<blDataType>::blReverseIterator(const blReverseIterator<blDataType>& reverseIterator)
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr>::blReverseIterator(const blReverseIterator<blDataType,blDataPtr>& reverseIterator)
 {
     this->m_ptr = reverseIterator.getPtr();
 }
@@ -195,8 +218,10 @@ inline blReverseIterator<blDataType>::blReverseIterator(const blReverseIterator<
 //-------------------------------------------------------------------
 // Destructor
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blReverseIterator<blDataType>::~blReverseIterator()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr>::~blReverseIterator()
 {
 }
 //-------------------------------------------------------------------
@@ -206,43 +231,24 @@ inline blReverseIterator<blDataType>::~blReverseIterator()
 //-------------------------------------------------------------------
 // Assignment operators
 //-------------------------------------------------------------------
-template<typename blDataType>
-template<typename blAnotherTypeOfIterator>
-inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator=(const blAnotherTypeOfIterator& iter)
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr>& blReverseIterator<blDataType,blDataPtr>::operator=(const blReverseIterator<blDataType,blDataPtr>& reverseIterator)
 {
-    this->m_ptr = &(*iter);
-
-    return (*this);
-}
-
-
-template<typename blDataType>
-inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator=(const std::nullptr_t& nullPointer)
-{
-    this->m_ptr = nullPointer;
+    this->m_ptr = reverseIterator.getPtr();
 
     return (*this);
 }
 
 
 
-template<typename blDataType>
-inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator=(const blReverseIterator<blDataType>& reverseIterator)
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr>& blReverseIterator<blDataType,blDataPtr>::operator=(const blDataPtr& ptr)
 {
-    if(this != &reverseIterator)
-    {
-        this->m_ptr = reverseIterator.getPtr();
-    }
-
-    return (*this);
-}
-
-
-
-template<typename blDataType>
-inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator=(blDataType* ptr)
-{
-    this->m_ptr = ptr;
+    this->m_ptr = blDataPtr(ptr);
 
     return (*this);
 }
@@ -251,8 +257,34 @@ inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator=(b
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator+=(const ptrdiff_t& movement)
+// Comparison operators
+//-------------------------------------------------------------------
+template<typename blDataType,
+         typename blDataPtr>
+
+inline bool blReverseIterator<blDataType,blDataPtr>::operator==(const blReverseIterator<blDataType,blDataPtr>& reverseIterator)const
+{
+    return this->m_ptr == reverseIterator.getPtr();
+}
+
+
+
+template<typename blDataType,
+         typename blDataPtr>
+
+inline bool blReverseIterator<blDataType,blDataPtr>::operator!=(const blReverseIterator<blDataType,blDataPtr>& reverseIterator)const
+{
+    return this->m_ptr != reverseIterator.getPtr();
+}
+//-------------------------------------------------------------------
+
+
+
+//-------------------------------------------------------------------
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr>& blReverseIterator<blDataType,blDataPtr>::operator+=(const ptrdiff_t& movement)
 {
     this->m_ptr -= movement;
 
@@ -263,8 +295,10 @@ inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator+=(
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator-=(const ptrdiff_t& movement)
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr>& blReverseIterator<blDataType,blDataPtr>::operator-=(const ptrdiff_t& movement)
 {
     this->m_ptr += movement;
 
@@ -275,8 +309,10 @@ inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator-=(
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator++()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr>& blReverseIterator<blDataType,blDataPtr>::operator++()
 {
     --this->m_ptr;
 
@@ -287,8 +323,10 @@ inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator++(
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator--()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr>& blReverseIterator<blDataType,blDataPtr>::operator--()
 {
     ++this->m_ptr;
 
@@ -299,8 +337,10 @@ inline blReverseIterator<blDataType>& blReverseIterator<blDataType>::operator--(
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blReverseIterator<blDataType> blReverseIterator<blDataType>::operator++(int)
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr> blReverseIterator<blDataType,blDataPtr>::operator++(int)
 {
     auto temp(*this);
 
@@ -313,8 +353,10 @@ inline blReverseIterator<blDataType> blReverseIterator<blDataType>::operator++(i
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blReverseIterator<blDataType> blReverseIterator<blDataType>::operator--(int)
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr> blReverseIterator<blDataType,blDataPtr>::operator--(int)
 {
     auto temp(*this);
 
@@ -327,36 +369,42 @@ inline blReverseIterator<blDataType> blReverseIterator<blDataType>::operator--(i
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blReverseIterator<blDataType> blReverseIterator<blDataType>::operator+(const int& movement)const
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr> blReverseIterator<blDataType,blDataPtr>::operator+(const int& movement)const
 {
-    auto oldPtr = this->m_ptr;
+    auto advancedIterator = (*this);
 
-    oldPtr -= movement;
+    advancedIterator += movement;
 
-    return blReverseIterator<blDataType>(oldPtr);
+    return advancedIterator;
 }
 //-------------------------------------------------------------------
 
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blReverseIterator<blDataType> blReverseIterator<blDataType>::operator-(const int& movement)const
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr> blReverseIterator<blDataType,blDataPtr>::operator-(const int& movement)const
 {
-    auto oldPtr = this->m_ptr;
+    auto advancedIterator = (*this);
 
-    oldPtr += movement;
+    advancedIterator -= movement;
 
-    return blReverseIterator<blDataType>(oldPtr);
+    return advancedIterator;
 }
 //-------------------------------------------------------------------
 
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline ptrdiff_t blReverseIterator<blDataType>::operator-(const blReverseIterator<blDataType>& reverseIterator)const
+template<typename blDataType,
+         typename blDataPtr>
+
+inline ptrdiff_t blReverseIterator<blDataType,blDataPtr>::operator-(const blReverseIterator<blDataType,blDataPtr>& reverseIterator)const
 {
     return std::distance(reverseIterator.getPtr(),m_ptr);
 }
@@ -365,22 +413,26 @@ inline ptrdiff_t blReverseIterator<blDataType>::operator-(const blReverseIterato
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blReverseIterator<blDataType> blReverseIterator<blDataType>::base()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blReverseIterator<blDataType,blDataPtr> blReverseIterator<blDataType,blDataPtr>::base()
 {
     auto basePtr = m_ptr;
 
     --basePtr;
 
-    return blReverseIterator<blDataType>(basePtr);
+    return blReverseIterator<blDataType,blDataPtr>(basePtr);
 }
 //-------------------------------------------------------------------
 
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blDataType& blReverseIterator<blDataType>::operator*()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blDataType& blReverseIterator<blDataType,blDataPtr>::operator*()
 {
     return *m_ptr;
 }
@@ -389,8 +441,10 @@ inline blDataType& blReverseIterator<blDataType>::operator*()
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline const blDataType& blReverseIterator<blDataType>::operator*()const
+template<typename blDataType,
+         typename blDataPtr>
+
+inline const blDataType& blReverseIterator<blDataType,blDataPtr>::operator*()const
 {
     return *m_ptr;
 }
@@ -399,8 +453,10 @@ inline const blDataType& blReverseIterator<blDataType>::operator*()const
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blDataType* blReverseIterator<blDataType>::operator->()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blDataPtr blReverseIterator<blDataType,blDataPtr>::operator->()
 {
     return m_ptr;
 }
@@ -409,8 +465,10 @@ inline blDataType* blReverseIterator<blDataType>::operator->()
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blDataType* blReverseIterator<blDataType>::getPtr()const
+template<typename blDataType,
+         typename blDataPtr>
+
+inline const blDataPtr& blReverseIterator<blDataType,blDataPtr>::getPtr()const
 {
     return m_ptr;
 }
@@ -419,10 +477,16 @@ inline blDataType* blReverseIterator<blDataType>::getPtr()const
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline const blDataType* blReverseIterator<blDataType>::getConstPtr()const
+// Output reverse iterator address to output stream
+//-------------------------------------------------------------------
+template<typename blDataType,
+         typename blDataPtr>
+
+inline std::ostream& operator<<(std::ostream& os,const blReverseIterator<blDataType,blDataPtr>& reverseIterator)
 {
-    return m_ptr;
+    os << reverseIterator.getPtr();
+
+    return os;
 }
 //-------------------------------------------------------------------
 

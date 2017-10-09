@@ -49,9 +49,12 @@ namespace blBufferLIB
 //-------------------------------------------------------------------
 // class blBuffer_6 declaration
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
 
-class blBuffer_6 : public blBuffer_5<blDataType>
+class blBuffer_6 : public blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>
 {
 public: // Constructors and destructors
 
@@ -65,7 +68,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blBuffer_6(const blBuffer_6<blDataType>& buffer6) = default;
+    blBuffer_6(const blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer6) = default;
 
 
 
@@ -81,7 +84,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_6<blDataType>&                 operator=(const blBuffer_6<blDataType>& buffer6) = default;
+    blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&       operator=(const blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer6) = default;
 
 
 
@@ -131,8 +134,12 @@ private: // Create function that does the
 //-------------------------------------------------------------------
 // Default constructor
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blBuffer_6<blDataType>::blBuffer_6() : blBuffer_5<blDataType>()
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
+
+inline blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer_6() : blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>()
 {
 }
 //-------------------------------------------------------------------
@@ -142,8 +149,12 @@ inline blBuffer_6<blDataType>::blBuffer_6() : blBuffer_5<blDataType>()
 //-------------------------------------------------------------------
 // Destructor
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blBuffer_6<blDataType>::~blBuffer_6()
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
+
+inline blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::~blBuffer_6()
 {
 }
 //-------------------------------------------------------------------
@@ -154,10 +165,13 @@ inline blBuffer_6<blDataType>::~blBuffer_6()
 // create functions used to allocate and
 // initialize space for the buffer
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
 template<typename...blIntegerType>
 
-inline bool blBuffer_6<blDataType>::create(const blIntegerType&...bufferLengths)
+inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(const blIntegerType&...bufferLengths)
 {
     this->m_properties.setDimensionalSizes({static_cast<std::size_t>(bufferLengths)...});
 
@@ -166,9 +180,13 @@ inline bool blBuffer_6<blDataType>::create(const blIntegerType&...bufferLengths)
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
 template<typename blIntegerType>
-inline bool blBuffer_6<blDataType>::create(const std::initializer_list<blIntegerType>& bufferLengths)
+
+inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(const std::initializer_list<blIntegerType>& bufferLengths)
 {
     this->m_properties.setDimensionalSizes(bufferLengths);
 
@@ -177,9 +195,13 @@ inline bool blBuffer_6<blDataType>::create(const std::initializer_list<blInteger
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
 template<typename blIntegerType>
-inline bool blBuffer_6<blDataType>::create(const std::vector<blIntegerType>& bufferLengths)
+
+inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(const std::vector<blIntegerType>& bufferLengths)
 {
     this->m_properties.setDimensionalSizes(bufferLengths);
 
@@ -192,8 +214,12 @@ inline bool blBuffer_6<blDataType>::create(const std::vector<blIntegerType>& buf
 //-------------------------------------------------------------------
 // create function used to allocate space for the buffer
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline bool blBuffer_6<blDataType>::create()
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
+
+inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create()
 {
     // First we try to allocate the
     // requested space

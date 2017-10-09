@@ -13,6 +13,13 @@
 //                     begin/end iterators to the buffer, plus functions
 //                     to access the buffer's data as raw data
 //
+//                  -- The class allows the user to specify the type
+//                     of pointer used, which is defaulted to a raw pointer
+//                     The user could instead opt for a "offset_ptr"
+//                     from the boost interprocess library to allow
+//                     the use of blBuffer in shared memory for multi-
+//                     process applications
+//
 //                  -- This class is defined within the blBufferLIB
 //                     namespace
 //
@@ -64,21 +71,22 @@ namespace blBufferLIB
 //-------------------------------------------------------------------
 // class blBuffer_1 declaration
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr>
 
 class blBuffer_1 : public blBuffer_0<blDataType>
 {
-public: // Public typedefs
+public: // Public type aliases
 
 
 
     // Buffer iterators
 
-    typedef blDataType*                             iterator;
-    typedef const blDataType*                       const_iterator;
+    using iterator = blDataPtr;
+    using const_iterator = const blDataPtr;
 
-    typedef blReverseIterator<blDataType>           reverse_iterator;
-    typedef blReverseIterator<const blDataType>     const_reverse_iterator;
+    using reverse_iterator = blReverseIterator<blDataType,blDataPtr>;
+    using const_reverse_iterator = blReverseIterator<const blDataType,const blDataPtr>;
 
 
 
@@ -94,7 +102,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blBuffer_1(const blBuffer_1<blDataType>& buffer1) = default;
+    blBuffer_1(const blBuffer_1<blDataType,blDataPtr>& buffer1) = default;
 
 
 
@@ -110,7 +118,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_1<blDataType>&                 operator=(const blBuffer_1<blDataType>& buffer1) = default;
+    blBuffer_1<blDataType,blDataPtr>&       operator=(const blBuffer_1<blDataType,blDataPtr>& buffer1) = default;
 
 
 
@@ -123,8 +131,8 @@ public: // Public functions
     // buffer, not dereferenceable when
     // buffer is empty
 
-    blDataType*                             data();
-    const blDataType*                       data()const;
+    blDataPtr                               data();
+    const blDataPtr                         data()const;
 
 
 
@@ -258,8 +266,10 @@ private: // Private variables
 //-------------------------------------------------------------------
 // Default constructor
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blBuffer_1<blDataType>::blBuffer_1() : blBuffer_0<blDataType>()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blBuffer_1<blDataType,blDataPtr>::blBuffer_1() : blBuffer_0<blDataType>()
 {
     // Default all data iterators
     // to null pointers
@@ -278,8 +288,10 @@ inline blBuffer_1<blDataType>::blBuffer_1() : blBuffer_0<blDataType>()
 //-------------------------------------------------------------------
 // Destructor
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blBuffer_1<blDataType>::~blBuffer_1()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blBuffer_1<blDataType,blDataPtr>::~blBuffer_1()
 {
 }
 //-------------------------------------------------------------------
@@ -289,57 +301,67 @@ inline blBuffer_1<blDataType>::~blBuffer_1()
 //-------------------------------------------------------------------
 // wrap -- used to wrap data from an external source
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr>
+
 template<typename blExistinDataType,
          typename...blIntegerType>
 
-inline void blBuffer_1<blDataType>::wrap(blExistinDataType& data,
-                                         const blIntegerType&... bufferLengths)
+inline void blBuffer_1<blDataType,blDataPtr>::wrap(blExistinDataType& data,
+                                                   const blIntegerType&... bufferLengths)
 {
     wrap(&data,{static_cast<std::size_t>(bufferLengths)...});
 }
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr>
+
 template<typename blExistinDataType>
 
-inline void blBuffer_1<blDataType>::wrap(blExistinDataType& data,
-                                         const std::initializer_list<std::size_t>& bufferLengths)
+inline void blBuffer_1<blDataType,blDataPtr>::wrap(blExistinDataType& data,
+                                                   const std::initializer_list<std::size_t>& bufferLengths)
 {
     wrap(&data,bufferLengths);
 }
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr>
+
 template<typename blExistinDataType>
 
-inline void blBuffer_1<blDataType>::wrap(blExistinDataType& data,
-                                         const std::vector<std::size_t>& bufferLengths)
+inline void blBuffer_1<blDataType,blDataPtr>::wrap(blExistinDataType& data,
+                                                   const std::vector<std::size_t>& bufferLengths)
 {
     wrap(&data,bufferLengths);
 }
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr>
+
 template<typename blExistinDataType,
          typename...blIntegerType>
 
-inline void blBuffer_1<blDataType>::wrap(blExistinDataType* dataPointer,
-                                         const blIntegerType&... bufferLengths)
+inline void blBuffer_1<blDataType,blDataPtr>::wrap(blExistinDataType* dataPointer,
+                                                   const blIntegerType&... bufferLengths)
 {
     wrap(dataPointer,{static_cast<std::size_t>(bufferLengths)...});
 }
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr>
+
 template<typename blExistinDataType>
 
-inline void blBuffer_1<blDataType>::wrap(blExistinDataType* dataPointer,
-                                         const std::initializer_list<std::size_t>& bufferLengths)
+inline void blBuffer_1<blDataType,blDataPtr>::wrap(blExistinDataType* dataPointer,
+                                                   const std::initializer_list<std::size_t>& bufferLengths)
 {
     // First we create the
     // sizes vector with the
@@ -371,11 +393,13 @@ inline void blBuffer_1<blDataType>::wrap(blExistinDataType* dataPointer,
 
 
 
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr>
+
 template<typename blExistinDataType>
 
-inline void blBuffer_1<blDataType>::wrap(blExistinDataType* dataPointer,
-                                         const std::vector<std::size_t>& bufferLengths)
+inline void blBuffer_1<blDataType,blDataPtr>::wrap(blExistinDataType* dataPointer,
+                                                   const std::vector<std::size_t>& bufferLengths)
 {
     // First we create the
     // sizes vector with the
@@ -409,8 +433,10 @@ inline void blBuffer_1<blDataType>::wrap(blExistinDataType* dataPointer,
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline void blBuffer_1<blDataType>::resetDataPointers()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline void blBuffer_1<blDataType,blDataPtr>::resetDataPointers()
 {
     // First we set the
     // data iterators and
@@ -419,9 +445,9 @@ inline void blBuffer_1<blDataType>::resetDataPointers()
     if(this->m_data.size() > 0)
     {
         m_begin = this->m_data.data();
-        m_end = m_begin + this->m_data.size();
+        m_end = m_begin + this->size();
 
-        m_rbegin = reverse_iterator(m_begin + this->m_data.size() - 1);
+        m_rbegin = reverse_iterator(m_begin + (this->size() - 1));
         m_rend = reverse_iterator(m_begin - 1);
     }
     else
@@ -446,8 +472,10 @@ inline void blBuffer_1<blDataType>::resetDataPointers()
 
 
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline bool blBuffer_1<blDataType>::doesBufferOwnData()const
+template<typename blDataType,
+         typename blDataPtr>
+
+inline bool blBuffer_1<blDataType,blDataPtr>::doesBufferOwnData()const
 {
     return ( m_begin == this->m_data.data() );
 }
@@ -459,16 +487,20 @@ inline bool blBuffer_1<blDataType>::doesBufferOwnData()const
 // Functions used to get a pointer to
 // the first element in the data buffer
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blDataType* blBuffer_1<blDataType>::data()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline blDataPtr blBuffer_1<blDataType,blDataPtr>::data()
 {
     return m_begin;
 }
 
 
 
-template<typename blDataType>
-inline const blDataType* blBuffer_1<blDataType>::data()const
+template<typename blDataType,
+         typename blDataPtr>
+
+inline const blDataPtr blBuffer_1<blDataType,blDataPtr>::data()const
 {
     return m_begin;
 }
@@ -481,16 +513,20 @@ inline const blDataType* blBuffer_1<blDataType>::data()const
 // first element in the data buffer but cast
 // to a raw byte pointer
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline unsigned char* blBuffer_1<blDataType>::dataBytes()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline unsigned char* blBuffer_1<blDataType,blDataPtr>::dataBytes()
 {
     return reinterpret_cast<unsigned char*>(m_begin);
 }
 
 
 
-template<typename blDataType>
-inline const unsigned char* blBuffer_1<blDataType>::dataBytes()const
+template<typename blDataType,
+         typename blDataPtr>
+
+inline const unsigned char* blBuffer_1<blDataType,blDataPtr>::dataBytes()const
 {
     return reinterpret_cast<const unsigned char*>(m_begin);
 }
@@ -501,64 +537,80 @@ inline const unsigned char* blBuffer_1<blDataType>::dataBytes()const
 //-------------------------------------------------------------------
 // Iterators to the buffer
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline typename blBuffer_1<blDataType>::iterator blBuffer_1<blDataType>::begin()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline typename blBuffer_1<blDataType,blDataPtr>::iterator blBuffer_1<blDataType,blDataPtr>::begin()
 {
     return m_begin;
 }
 
 
 
-template<typename blDataType>
-inline typename blBuffer_1<blDataType>::iterator blBuffer_1<blDataType>::end()
+template<typename blDataType,
+         typename blDataPtr>
+
+inline typename blBuffer_1<blDataType,blDataPtr>::iterator blBuffer_1<blDataType,blDataPtr>::end()
 {
     return m_end;
 }
 
 
 
-template<typename blDataType>
-inline typename blBuffer_1<blDataType>::const_iterator blBuffer_1<blDataType>::cbegin()const
+template<typename blDataType,
+         typename blDataPtr>
+
+inline typename blBuffer_1<blDataType,blDataPtr>::const_iterator blBuffer_1<blDataType,blDataPtr>::cbegin()const
 {
     return m_begin;
 }
 
 
 
-template<typename blDataType>
-inline typename blBuffer_1<blDataType>::const_iterator blBuffer_1<blDataType>::cend()const
+template<typename blDataType,
+         typename blDataPtr>
+
+inline typename blBuffer_1<blDataType,blDataPtr>::const_iterator blBuffer_1<blDataType,blDataPtr>::cend()const
 {
     return m_end;
 }
 
 
 
-template<typename blDataType>
-inline typename blBuffer_1<blDataType>::reverse_iterator blBuffer_1<blDataType>::rbegin()
-{
-    m_rbegin;
-}
+template<typename blDataType,
+         typename blDataPtr>
 
-
-
-template<typename blDataType>
-inline typename blBuffer_1<blDataType>::reverse_iterator blBuffer_1<blDataType>::rend()
-{
-    m_rend;
-}
-
-
-
-template<typename blDataType>
-inline typename blBuffer_1<blDataType>::const_reverse_iterator blBuffer_1<blDataType>::crbegin()const
+inline typename blBuffer_1<blDataType,blDataPtr>::reverse_iterator blBuffer_1<blDataType,blDataPtr>::rbegin()
 {
     return m_rbegin;
 }
 
 
 
-template<typename blDataType>
-inline typename blBuffer_1<blDataType>::const_reverse_iterator blBuffer_1<blDataType>::crend()const
+template<typename blDataType,
+         typename blDataPtr>
+
+inline typename blBuffer_1<blDataType,blDataPtr>::reverse_iterator blBuffer_1<blDataType,blDataPtr>::rend()
+{
+    return m_rend;
+}
+
+
+
+template<typename blDataType,
+         typename blDataPtr>
+
+inline typename blBuffer_1<blDataType,blDataPtr>::const_reverse_iterator blBuffer_1<blDataType,blDataPtr>::crbegin()const
+{
+    return m_rbegin;
+}
+
+
+
+template<typename blDataType,
+         typename blDataPtr>
+
+inline typename blBuffer_1<blDataType,blDataPtr>::const_reverse_iterator blBuffer_1<blDataType,blDataPtr>::crend()const
 {
     return m_rend;
 }

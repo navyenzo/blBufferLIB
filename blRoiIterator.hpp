@@ -67,15 +67,17 @@ namespace blBufferLIB
 
 
 //-------------------------------------------------------------------
-template<typename blBufferType>
-class blRoiIterator : public blCircularIterator<blBufferType>
+template<typename blBufferType,
+         typename blBufferPtr = blBufferType*>
+
+class blRoiIterator : public blCircularIterator<blBufferType,blBufferPtr>
 {
 public: // Public typedefs
 
 
 
-    typedef typename blCircularIterator<blBufferType>::blDataType       blDataType;
-    typedef typename blCircularIterator<blBufferType>::blDataTypePtr    blDataTypePtr;
+    using blDataType = typename blCircularIterator<blBufferType,blBufferPtr>::blDataType;
+    using blDataPtr = typename blCircularIterator<blBufferType,blBufferPtr>::blDataPtr;
 
 
 
@@ -83,23 +85,17 @@ public: // Constructors and destructors
 
 
 
-    // No default constructor
+    // Default constructor
 
-    blRoiIterator() = delete;
-
-
-
-    // Constructor from a buffer reference
-
-    blRoiIterator(blBufferType& buffer,
-                  const std::ptrdiff_t& dataIndex,
-                  const std::ptrdiff_t& maxNumberOfCirculations);
+    blRoiIterator(const blBufferPtr& bufferPtr = blBufferPtr(nullptr),
+                  const std::ptrdiff_t& dataIndex = std::ptrdiff_t(0),
+                  const std::ptrdiff_t& maxNumberOfCirculations = std::ptrdiff_t(1));
 
 
 
     // Copy constructor
 
-    blRoiIterator(const blRoiIterator<blBufferType>& roiIterator);
+    blRoiIterator(const blRoiIterator<blBufferType,blBufferPtr>& roiIterator);
 
 
 
@@ -116,7 +112,14 @@ public: // Overloaded public functions
     // Function returning the
     // iterator's base
 
-    blRoiIterator<blBufferType>                 base();
+    blRoiIterator<blBufferType,blBufferPtr>                 base();
+
+
+
+    // Comparator operators
+
+    bool                                                    operator==(const blRoiIterator<blBufferType,blBufferPtr>& roiIterator)const;
+    bool                                                    operator!=(const blRoiIterator<blBufferType,blBufferPtr>& roiIterator)const;
 
 
 
@@ -129,21 +132,21 @@ public: // Overloaded public functions
     // from the current buffer index without
     // circling back around
 
-    std::size_t                                 remainingContiguousSpots()const;
-    std::size_t                                 remainingContiguousBytes()const;
+    std::size_t                                             remainingContiguousSpots()const;
+    std::size_t                                             remainingContiguousBytes()const;
 
 
 
     // Arithmetic operators
 
-    blRoiIterator<blBufferType>&                operator+=(const int& movement);
-    blRoiIterator<blBufferType>&                operator-=(const int& movement);
-    blRoiIterator<blBufferType>&                operator++();
-    blRoiIterator<blBufferType>&                operator--();
-    blRoiIterator<blBufferType>                 operator++(int);
-    blRoiIterator<blBufferType>                 operator--(int);
-    blRoiIterator<blBufferType>                 operator+(const int& movement)const;
-    blRoiIterator<blBufferType>                 operator-(const int& movement)const;
+    blRoiIterator<blBufferType,blBufferPtr>&                operator+=(const int& movement);
+    blRoiIterator<blBufferType,blBufferPtr>&                operator-=(const int& movement);
+    blRoiIterator<blBufferType,blBufferPtr>&                operator++();
+    blRoiIterator<blBufferType,blBufferPtr>&                operator--();
+    blRoiIterator<blBufferType,blBufferPtr>                 operator++(int);
+    blRoiIterator<blBufferType,blBufferPtr>                 operator--(int);
+    blRoiIterator<blBufferType,blBufferPtr>                 operator+(const int& movement)const;
+    blRoiIterator<blBufferType,blBufferPtr>                 operator-(const int& movement)const;
 
 
 
@@ -151,7 +154,7 @@ public: // Overloaded public functions
     // distance in the buffer between
     // this iterator and another one
 
-    std::ptrdiff_t                              actualDistanceInTheBufferFromAnotherIterator(const blRoiIterator<blBufferType>& iterator);
+    std::ptrdiff_t                                          actualDistanceInTheBufferFromAnotherIterator(const blRoiIterator<blBufferType,blBufferPtr>& iterator);
 
 
 
@@ -160,7 +163,7 @@ public: // Overloaded public functions
     // want to use the the overload
     // arithmetic operators
 
-    blRoiIterator<blBufferType>&                advance(const std::ptrdiff_t& movement);
+    blRoiIterator<blBufferType,blBufferPtr>&                advance(const std::ptrdiff_t& movement);
 
 
 
@@ -169,12 +172,12 @@ public: // Overloaded public functions
     // circulations
     // For example if advancing
     // circulations by 1, the iterator
-    // is advanced by m_buffer.size()
+    // is advanced by m_bufferPtr->size()
     // of if advancing by -2, the
     // iterator is advanced by
-    // -2*m_buffer.size()
+    // -2*m_bufferPtr->size()
 
-    blRoiIterator<blBufferType>&                advanceCirculations(const std::ptrdiff_t& numberOfCirculationsToAdvanceTheIteratorBy);
+    blRoiIterator<blBufferType,blBufferPtr>&                advanceCirculations(const std::ptrdiff_t& numberOfCirculationsToAdvanceTheIteratorBy);
 
 
 
@@ -182,11 +185,11 @@ public: // Overloaded public functions
     // or reference to the indexed data
     // point in the buffer
 
-    blDataTypePtr                               getPointerToIndexedDataPoint();
-    const blDataTypePtr                         getPointerToIndexedDataPoint()const;
+    blDataPtr                                               getPointerToIndexedDataPoint();
+    const blDataPtr                                         getPointerToIndexedDataPoint()const;
 
-    blDataType&                                 getReferenceToIndexedDataPoint();
-    const blDataType&                           getReferenceToIndexedDataPoint()const;
+    blDataType&                                             getReferenceToIndexedDataPoint();
+    const blDataType&                                       getReferenceToIndexedDataPoint()const;
 
 
 
@@ -195,10 +198,10 @@ public: // Overloaded public functions
 
     // Dereferencing operators
 
-    blDataType&                                 operator*();
-    const blDataType&                           operator*()const;
-    blDataTypePtr                               operator->();
-    const blDataTypePtr                         operator->()const;
+    blDataType&                                             operator*();
+    const blDataType&                                       operator*()const;
+    blDataPtr                                               operator->();
+    const blDataPtr                                         operator->()const;
 
 
 
@@ -211,7 +214,7 @@ protected: // Protected functions
     // the iterator has gone through up
     // to this instant
 
-    void                                        updateCurrentNumberOfCirculations();
+    void                                                    updateCurrentNumberOfCirculations();
 };
 //-------------------------------------------------------------------
 
@@ -220,21 +223,25 @@ protected: // Protected functions
 //-------------------------------------------------------------------
 // Constructors
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline blRoiIterator<blBufferType>::blRoiIterator(blBufferType& buffer,
-                                                  const std::ptrdiff_t& dataIndex,
-                                                  const std::ptrdiff_t& maxNumberOfCirculations)
-                                                  : blCircularIterator<blBufferType>(buffer,
-                                                                                     dataIndex,
-                                                                                     maxNumberOfCirculations)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr>::blRoiIterator(const blBufferPtr& bufferPtr,
+                                                              const std::ptrdiff_t& dataIndex,
+                                                              const std::ptrdiff_t& maxNumberOfCirculations)
+                                                              : blCircularIterator<blBufferType,blBufferPtr>(bufferPtr,
+                                                                                                             dataIndex,
+                                                                                                             maxNumberOfCirculations)
 {
 }
 
 
 
-template<typename blBufferType>
-inline blRoiIterator<blBufferType>::blRoiIterator(const blRoiIterator<blBufferType>& roiIterator)
-                                                  : blCircularIterator<blBufferType>(roiIterator)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr>::blRoiIterator(const blRoiIterator<blBufferType,blBufferPtr>& roiIterator)
+                                                              : blCircularIterator<blBufferType,blBufferPtr>(roiIterator)
 {
 }
 //-------------------------------------------------------------------
@@ -244,9 +251,35 @@ inline blRoiIterator<blBufferType>::blRoiIterator(const blRoiIterator<blBufferTy
 //-------------------------------------------------------------------
 // Destructor
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline blRoiIterator<blBufferType>::~blRoiIterator()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr>::~blRoiIterator()
 {
+}
+//-------------------------------------------------------------------
+
+
+
+//-------------------------------------------------------------------
+// Comparator operators
+//-------------------------------------------------------------------
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline bool blRoiIterator<blBufferType,blBufferPtr>::operator==(const blRoiIterator<blBufferType,blBufferPtr>& roiIterator)const
+{
+    return ( this->getPointerToIndexedDataPoint() == roiIterator.getPointerToIndexedDataPoint() );
+}
+
+
+
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline bool blRoiIterator<blBufferType,blBufferPtr>::operator!=(const blRoiIterator<blBufferType,blBufferPtr>& roiIterator)const
+{
+    return ( this->getPointerToIndexedDataPoint() != roiIterator.getPointerToIndexedDataPoint() );
 }
 //-------------------------------------------------------------------
 
@@ -256,11 +289,13 @@ inline blRoiIterator<blBufferType>::~blRoiIterator()
 // Function used to update the current
 // number of circulations/cycles that the
 // iterator has gone through up to now
-//-------------------------------------------------------------------
-template<typename blBufferType>
-inline void blRoiIterator<blBufferType>::updateCurrentNumberOfCirculations()
+//------------------------------------------------
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline void blRoiIterator<blBufferType,blBufferPtr>::updateCurrentNumberOfCirculations()
 {
-    this->m_currentNumberOfCirculations = (this->m_dataIndex - this->m_startIndex) / std::ptrdiff_t(this->m_buffer.roi().size());
+    this->m_currentNumberOfCirculations = (this->m_dataIndex - this->m_startIndex) / std::ptrdiff_t(this->m_bufferPtr->roi().size());
 }
 //-------------------------------------------------------------------
 
@@ -269,8 +304,10 @@ inline void blRoiIterator<blBufferType>::updateCurrentNumberOfCirculations()
 //-------------------------------------------------------------------
 // Function returning the iterator's base
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline blRoiIterator<blBufferType> blRoiIterator<blBufferType>::base()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr> blRoiIterator<blBufferType,blBufferPtr>::base()
 {
     return (*this);
 }
@@ -288,18 +325,22 @@ inline blRoiIterator<blBufferType> blRoiIterator<blBufferType>::base()
 // from the current buffer index without
 // circling back around
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline std::size_t blRoiIterator<blBufferType>::remainingContiguousSpots()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline std::size_t blRoiIterator<blBufferType,blBufferPtr>::remainingContiguousSpots()const
 {
-    return this->m_buffer.roi().size() - this->circ_index(this->m_dataIndex,this->m_buffer.roi().size());
+    return this->m_bufferPtr->roi().size() - this->circ_index(this->m_dataIndex,this->m_bufferPtr->roi().size());
 }
 
 
 
-template<typename blBufferType>
-inline std::size_t blRoiIterator<blBufferType>::remainingContiguousBytes()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline std::size_t blRoiIterator<blBufferType,blBufferPtr>::remainingContiguousBytes()const
 {
-    return sizeof(blDataType) * (this->m_buffer.roi().size() - circ_index(this->m_dataIndex,this->m_buffer.roi().size()));
+    return sizeof(blDataType) * (this->m_bufferPtr->roi().size() - circ_index(this->m_dataIndex,this->m_bufferPtr->roi().size()));
 }
 //-------------------------------------------------------------------
 
@@ -309,32 +350,40 @@ inline std::size_t blRoiIterator<blBufferType>::remainingContiguousBytes()const
 // Overloaded Operators that let us use this class as
 // a normal iterator in stl-like algorithms
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline typename blRoiIterator<blBufferType>::blDataType& blRoiIterator<blBufferType>::operator*()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline typename blRoiIterator<blBufferType,blBufferPtr>::blDataType& blRoiIterator<blBufferType,blBufferPtr>::operator*()
 {
     return this->getReferenceToIndexedDataPoint();
 }
 
 
 
-template<typename blBufferType>
-inline const typename blRoiIterator<blBufferType>::blDataType& blRoiIterator<blBufferType>::operator*()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const typename blRoiIterator<blBufferType,blBufferPtr>::blDataType& blRoiIterator<blBufferType,blBufferPtr>::operator*()const
 {
     return this->getReferenceToIndexedDataPoint();
 }
 
 
 
-template<typename blBufferType>
-inline typename blRoiIterator<blBufferType>::blDataTypePtr blRoiIterator<blBufferType>::operator->()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline typename blRoiIterator<blBufferType,blBufferPtr>::blDataPtr blRoiIterator<blBufferType,blBufferPtr>::operator->()
 {
     return this->getPointerToIndexedDataPoint();
 }
 
 
 
-template<typename blBufferType>
-inline const typename blRoiIterator<blBufferType>::blDataTypePtr blRoiIterator<blBufferType>::operator->()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const typename blRoiIterator<blBufferType,blBufferPtr>::blDataPtr blRoiIterator<blBufferType,blBufferPtr>::operator->()const
 {
     return this->getPointerToIndexedDataPoint();
 }
@@ -346,8 +395,10 @@ inline const typename blRoiIterator<blBufferType>::blDataTypePtr blRoiIterator<b
 // Function used to advance the iterator if the user doesn't
 // want to use the the overload arithmetic operators
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline blRoiIterator<blBufferType>& blRoiIterator<blBufferType>::advance(const std::ptrdiff_t& movement)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr>& blRoiIterator<blBufferType,blBufferPtr>::advance(const std::ptrdiff_t& movement)
 {
     this->m_dataIndex += movement;
 
@@ -362,14 +413,16 @@ inline blRoiIterator<blBufferType>& blRoiIterator<blBufferType>::advance(const s
 //-------------------------------------------------------------------
 // Function used to advance the iterator by number of
 // circulations.  For example if advancing circulations
-// by 1, the iterator is advanced by m_buffer.size(), or
+// by 1, the iterator is advanced by m_bufferPtr->size(), or
 // if advancing by -2, the iterator is advanced by
-// -2*m_buffer.size()
+// -2*m_bufferPtr->size()
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline blRoiIterator<blBufferType>& blRoiIterator<blBufferType>::advanceCirculations(const std::ptrdiff_t& numberOfCirculationsToAdvanceTheIteratorBy)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr>& blRoiIterator<blBufferType,blBufferPtr>::advanceCirculations(const std::ptrdiff_t& numberOfCirculationsToAdvanceTheIteratorBy)
 {
-    this->m_dataIndex += numberOfCirculationsToAdvanceTheIteratorBy * this->m_buffer.roi().size();
+    this->m_dataIndex += numberOfCirculationsToAdvanceTheIteratorBy * this->m_bufferPtr->roi().size();
 
     this->updateCurrentNumberOfCirculations();
 
@@ -384,8 +437,10 @@ inline blRoiIterator<blBufferType>& blRoiIterator<blBufferType>::advanceCirculat
 // pointer to the indexed data point in the
 // buffer
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline typename blRoiIterator<blBufferType>::blDataType& blRoiIterator<blBufferType>::getReferenceToIndexedDataPoint()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline typename blRoiIterator<blBufferType,blBufferPtr>::blDataType& blRoiIterator<blBufferType,blBufferPtr>::getReferenceToIndexedDataPoint()
 {
     // If the max number of circulations
     // has been passed, then we return the
@@ -396,19 +451,17 @@ inline typename blRoiIterator<blBufferType>::blDataType& blRoiIterator<blBufferT
     // is negative, we never stop
 
     if(this->hasReachedEndOfBuffer())
-    {
-        return this->m_buffer.roi_at(this->m_buffer.roi().size());
-    }
-    else
-    {
-        return this->m_buffer.circ_roi_at(this->m_dataIndex);
-    }
+        return this->m_bufferPtr->roi_at(this->m_bufferPtr->roi().size());
+
+    return this->m_bufferPtr->roi_at(this->circ_index(this->m_dataIndex,this->m_bufferPtr->roi().size()));
 }
 
 
 
-template<typename blBufferType>
-inline const typename blRoiIterator<blBufferType>::blDataType& blRoiIterator<blBufferType>::getReferenceToIndexedDataPoint()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const typename blRoiIterator<blBufferType,blBufferPtr>::blDataType& blRoiIterator<blBufferType,blBufferPtr>::getReferenceToIndexedDataPoint()const
 {
     // If the max number of circulations
     // has been passed, then we return the
@@ -419,19 +472,17 @@ inline const typename blRoiIterator<blBufferType>::blDataType& blRoiIterator<blB
     // is negative, we never stop
 
     if(this->hasReachedEndOfBuffer())
-    {
-        return this->m_buffer.roi_at(this->m_buffer.roi().size());
-    }
-    else
-    {
-        return this->m_buffer.circ_roi_at(this->m_dataIndex);
-    }
+        return this->m_bufferPtr->roi_at(this->m_bufferPtr->roi().size());
+
+    return this->m_bufferPtr->roi_at(this->circ_index(this->m_dataIndex,this->m_bufferPtr->roi().size()));
 }
 
 
 
-template<typename blBufferType>
-inline typename blRoiIterator<blBufferType>::blDataTypePtr blRoiIterator<blBufferType>::getPointerToIndexedDataPoint()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline typename blRoiIterator<blBufferType,blBufferPtr>::blDataPtr blRoiIterator<blBufferType,blBufferPtr>::getPointerToIndexedDataPoint()
 {
     // If the max number of circulations
     // has been passed, then we return the
@@ -441,20 +492,21 @@ inline typename blRoiIterator<blBufferType>::blDataTypePtr blRoiIterator<blBuffe
     // If the max number of circulations
     // is negative, we never stop
 
+    if(!this->m_bufferPtr)
+        return blDataPtr(nullptr);
+
     if(this->hasReachedEndOfBuffer())
-    {
-        return &this->m_buffer.roi_at(this->m_buffer.roi().size());
-    }
-    else
-    {
-        return &this->m_buffer.circ_roi_at(this->m_dataIndex);
-    }
+        return blDataPtr(&this->m_bufferPtr->roi_at(this->m_bufferPtr->roi().size()));
+
+    return blDataPtr(&this->m_bufferPtr->roi_at(this->circ_index(this->m_dataIndex,this->m_bufferPtr->roi().size())));
 }
 
 
 
-template<typename blBufferType>
-inline const typename blRoiIterator<blBufferType>::blDataTypePtr blRoiIterator<blBufferType>::getPointerToIndexedDataPoint()const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline const typename blRoiIterator<blBufferType,blBufferPtr>::blDataPtr blRoiIterator<blBufferType,blBufferPtr>::getPointerToIndexedDataPoint()const
 {
     // If the max number of circulations
     // has been passed, then we return the
@@ -464,14 +516,13 @@ inline const typename blRoiIterator<blBufferType>::blDataTypePtr blRoiIterator<b
     // If the max number of circulations
     // is negative, we never stop
 
+    if(!this->m_bufferPtr)
+        return blDataPtr(nullptr);
+
     if(this->hasReachedEndOfBuffer())
-    {
-        return &this->m_buffer.roi_at(this->m_buffer.roi().size());
-    }
-    else
-    {
-        return &this->m_buffer.circ_roi_at(this->m_dataIndex);
-    }
+        return blDataPtr(&this->m_bufferPtr->roi_at(this->m_bufferPtr->roi().size()));
+
+    return blDataPtr(&this->m_bufferPtr->roi_at(this->circ_index(this->m_dataIndex,this->m_bufferPtr->roi().size())));
 }
 //-------------------------------------------------------------------
 
@@ -480,8 +531,10 @@ inline const typename blRoiIterator<blBufferType>::blDataTypePtr blRoiIterator<b
 //-------------------------------------------------------------------
 // Arithmetic operators
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline blRoiIterator<blBufferType>& blRoiIterator<blBufferType>::operator+=(const int& movement)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr>& blRoiIterator<blBufferType,blBufferPtr>::operator+=(const int& movement)
 {
     this->m_dataIndex += movement;
 
@@ -492,8 +545,10 @@ inline blRoiIterator<blBufferType>& blRoiIterator<blBufferType>::operator+=(cons
 
 
 
-template<typename blBufferType>
-inline blRoiIterator<blBufferType>& blRoiIterator<blBufferType>::operator-=(const int& movement)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr>& blRoiIterator<blBufferType,blBufferPtr>::operator-=(const int& movement)
 {
     this->m_dataIndex -= movement;
 
@@ -504,8 +559,10 @@ inline blRoiIterator<blBufferType>& blRoiIterator<blBufferType>::operator-=(cons
 
 
 
-template<typename blBufferType>
-inline blRoiIterator<blBufferType>& blRoiIterator<blBufferType>::operator++()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr>& blRoiIterator<blBufferType,blBufferPtr>::operator++()
 {
     ++this->m_dataIndex;
 
@@ -516,8 +573,10 @@ inline blRoiIterator<blBufferType>& blRoiIterator<blBufferType>::operator++()
 
 
 
-template<typename blBufferType>
-inline blRoiIterator<blBufferType>& blRoiIterator<blBufferType>::operator--()
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr>& blRoiIterator<blBufferType,blBufferPtr>::operator--()
 {
     --this->m_dataIndex;
 
@@ -528,8 +587,10 @@ inline blRoiIterator<blBufferType>& blRoiIterator<blBufferType>::operator--()
 
 
 
-template<typename blBufferType>
-inline blRoiIterator<blBufferType> blRoiIterator<blBufferType>::operator++(int)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr> blRoiIterator<blBufferType,blBufferPtr>::operator++(int)
 {
     auto temp(*this);
 
@@ -542,8 +603,10 @@ inline blRoiIterator<blBufferType> blRoiIterator<blBufferType>::operator++(int)
 
 
 
-template<typename blBufferType>
-inline blRoiIterator<blBufferType> blRoiIterator<blBufferType>::operator--(int)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr> blRoiIterator<blBufferType,blBufferPtr>::operator--(int)
 {
     auto temp(*this);
 
@@ -556,8 +619,10 @@ inline blRoiIterator<blBufferType> blRoiIterator<blBufferType>::operator--(int)
 
 
 
-template<typename blBufferType>
-inline blRoiIterator<blBufferType> blRoiIterator<blBufferType>::operator+(const int& movement)const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr> blRoiIterator<blBufferType,blBufferPtr>::operator+(const int& movement)const
 {
     auto temp(*this);
 
@@ -568,8 +633,10 @@ inline blRoiIterator<blBufferType> blRoiIterator<blBufferType>::operator+(const 
 
 
 
-template<typename blBufferType>
-inline blRoiIterator<blBufferType> blRoiIterator<blBufferType>::operator-(const int& movement)const
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline blRoiIterator<blBufferType,blBufferPtr> blRoiIterator<blBufferType,blBufferPtr>::operator-(const int& movement)const
 {
     auto temp(*this);
 
@@ -586,13 +653,31 @@ inline blRoiIterator<blBufferType> blRoiIterator<blBufferType>::operator-(const 
 // distance in the buffer between
 // this iterator and another one
 //-------------------------------------------------------------------
-template<typename blBufferType>
-inline std::ptrdiff_t blRoiIterator<blBufferType>::actualDistanceInTheBufferFromAnotherIterator(const blRoiIterator<blBufferType>& iterator)
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline std::ptrdiff_t blRoiIterator<blBufferType,blBufferPtr>::actualDistanceInTheBufferFromAnotherIterator(const blRoiIterator<blBufferType,blBufferPtr>& iterator)
 {
     return (
-            static_cast<std::ptrdiff_t>( circ_index(this->m_dataIndex,this->m_buffer.roi().size()) ) -
+            static_cast<std::ptrdiff_t>( circ_index(this->m_dataIndex,this->m_bufferPtr->roi().size()) ) -
             static_cast<std::ptrdiff_t>( circ_index(iterator.getDataIndex(),iterator.getBufferReference().roi().size()) )
            );
+}
+//-------------------------------------------------------------------
+
+
+
+//-------------------------------------------------------------------
+// Output circular iterator address to output stream
+//-------------------------------------------------------------------
+template<typename blBufferType,
+         typename blBufferPtr>
+
+inline std::ostream& operator<<(std::ostream& os,const blRoiIterator<blBufferType,blBufferPtr>& roiIterator)
+{
+    os << roiIterator.getPointerToIndexedDataPoint();
+
+    return os;
 }
 //-------------------------------------------------------------------
 

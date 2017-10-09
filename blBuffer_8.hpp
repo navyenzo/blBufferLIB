@@ -85,18 +85,21 @@ namespace blBufferLIB
 //-------------------------------------------------------------------
 // class blBuffer_8 declaration
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
 
-class blBuffer_8 : public blBuffer_7<blDataType>
+class blBuffer_8 : public blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>
 {
-public: // Public typedefs
+public: // Public type aliases
 
 
 
-    typedef typename blBuffer_7<blDataType>::circular_iterator              circular_iterator;
-    typedef typename blBuffer_7<blDataType>::circular_const_iterator        circular_const_iterator;
+    using circular_iterator = typename blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circular_iterator;
+    using circular_const_iterator = typename blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circular_const_iterator;
 
-    typedef std::unordered_map<int,circular_iterator>                       readIteratorsContainerType;
+    using readIteratorsContainerType = std::unordered_map<int,circular_iterator>;
 
 
 
@@ -112,7 +115,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blBuffer_8(const blBuffer_8<blDataType>& buffer8) = default;
+    blBuffer_8(const blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer8) = default;
 
 
 
@@ -128,7 +131,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_8<blDataType>&                 operator=(const blBuffer_8<blDataType>& buffer8) = default;
+    blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&       operator=(const blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer8) = default;
 
 
 
@@ -151,9 +154,12 @@ public: // Public functions
     // this buffer into an output
     // buffer
 
-    template<typename blAnotherDataType>
+    template<typename blAnotherDataType,
+             typename blAnotherDataPtr,
+             typename blAnotherBufferPtr,
+             typename blAnotherBufferRoiPtr>
     std::size_t                             read(const int& id,
-                                                 blBuffer_8<blAnotherDataType>& outputBuffer);
+                                                 blBuffer_8<blAnotherDataType,blAnotherDataPtr,blAnotherBufferPtr,blAnotherBufferRoiPtr>& outputBuffer);
 
 
 
@@ -208,8 +214,12 @@ private: // Private variables
 //-------------------------------------------------------------------
 // Default constructor
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blBuffer_8<blDataType>::blBuffer_8() : blBuffer_7<blDataType>()
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
+
+inline blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer_8() : blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>()
 {
 }
 //-------------------------------------------------------------------
@@ -219,8 +229,12 @@ inline blBuffer_8<blDataType>::blBuffer_8() : blBuffer_7<blDataType>()
 //-------------------------------------------------------------------
 // Destructor
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline blBuffer_8<blDataType>::~blBuffer_8()
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
+
+inline blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::~blBuffer_8()
 {
 }
 //-------------------------------------------------------------------
@@ -235,8 +249,12 @@ inline blBuffer_8<blDataType>::~blBuffer_8()
 // and initializes the iterator to point at the beginning of
 // the buffer
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline typename blBuffer_8<blDataType>::circular_iterator& blBuffer_8<blDataType>::readIterator(const int& id)
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
+
+inline typename blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circular_iterator& blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::readIterator(const int& id)
 {
     // First we have to check if
     // the specified read(id) iterator
@@ -308,8 +326,12 @@ inline typename blBuffer_8<blDataType>::circular_iterator& blBuffer_8<blDataType
 // it won't mistakingly read the same
 // data over and over
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline void blBuffer_8<blDataType>::adjustReadIterator(circular_iterator& readIter)
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
+
+inline void blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::adjustReadIterator(circular_iterator& readIter)
 {
     // We compare the current number
     // of circulations of the write
@@ -369,10 +391,18 @@ inline void blBuffer_8<blDataType>::adjustReadIterator(circular_iterator& readIt
 // this buffer into an output
 // buffer given by output iterators
 //-------------------------------------------------------------------
-template<typename blDataType>
-template<typename blAnotherDataType>
-inline std::size_t blBuffer_8<blDataType>::read(const int& id,
-                                                blBuffer_8<blAnotherDataType>& outputBuffer)
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
+
+template<typename blAnotherDataType,
+         typename blAnotherDataPtr,
+         typename blAnotherBufferPtr,
+         typename blAnotherBufferRoiPtr>
+
+inline std::size_t blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::read(const int& id,
+                                                                                     blBuffer_8<blAnotherDataType,blAnotherDataPtr,blAnotherBufferPtr,blAnotherBufferRoiPtr>& outputBuffer)
 {
     // First we grab a hold of
     // the corresponding read(id)
@@ -422,11 +452,15 @@ inline std::size_t blBuffer_8<blDataType>::read(const int& id,
 // this buffer into an output
 // buffer given by output iterators
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
 template<typename blOutputIteratorType>
-inline std::size_t blBuffer_8<blDataType>::read(const int& id,
-                                                const blOutputIteratorType& beginOutput,
-                                                const blOutputIteratorType& endOutput)
+
+inline std::size_t blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::read(const int& id,
+                                                                                     const blOutputIteratorType& beginOutput,
+                                                                                     const blOutputIteratorType& endOutput)
 {
     // First we grab a hold of
     // the corresponding read(id)
@@ -483,10 +517,14 @@ inline std::size_t blBuffer_8<blDataType>::read(const int& id,
 // raw data from this buffer and
 // copies it into the specified buffer
 //-------------------------------------------------------------------
-template<typename blDataType>
-inline std::size_t blBuffer_8<blDataType>::read(const int& id,
-                                                char* outputBuffer,
-                                                const std::size_t& outputBufferLength)
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr>
+
+inline std::size_t blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::read(const int& id,
+                                                                                     char* outputBuffer,
+                                                                                     const std::size_t& outputBufferLength)
 {
     // First we grab a hold of
     // the corresponding read(id)
