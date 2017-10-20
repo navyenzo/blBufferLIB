@@ -299,7 +299,7 @@ template<typename blIntegerType>
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& rowIndex,
                                                                 const blIntegerType& colIndex)
 {
-    return this->data()[colIndex * this->rows() + rowIndex];
+    return this->data()[colIndex * this->properties().rows() + rowIndex];
 }
 
 
@@ -311,7 +311,7 @@ template<typename blIntegerType>
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& rowIndex,
                                                                       const blIntegerType& colIndex)const
 {
-    return this->data()[colIndex * this->rows() + rowIndex];
+    return this->data()[colIndex * this->properties().rows() + rowIndex];
 }
 
 
@@ -324,7 +324,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerT
                                                                 const blIntegerType& colIndex,
                                                                 const blIntegerType& pageIndex)
 {
-    return this->data()[pageIndex * this->cols() * this->rows() + colIndex * this->rows() + rowIndex];
+    return this->data()[pageIndex * this->properties().cols() * this->properties().rows() + colIndex * this->properties().rows() + rowIndex];
 }
 
 
@@ -337,7 +337,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIn
                                                                       const blIntegerType& colIndex,
                                                                       const blIntegerType& pageIndex)const
 {
-    return this->data()[pageIndex * this->cols() * this->rows() + colIndex * this->rows() + rowIndex];
+    return this->data()[pageIndex * this->properties().cols() * this->properties().rows() + colIndex * this->properties().rows() + rowIndex];
 }
 //-------------------------------------------------------------------
 
@@ -562,7 +562,7 @@ template<typename blIntegerType>
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& rowIndex,
                                                         const blIntegerType& colIndex)
 {
-    return this->data()[colIndex * this->rows() + rowIndex];
+    return this->data()[colIndex * this->properties().rows() + rowIndex];
 }
 
 
@@ -574,7 +574,7 @@ template<typename blIntegerType>
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& rowIndex,
                                                               const blIntegerType& colIndex)const
 {
-    return this->data()[colIndex * this->rows() + rowIndex];
+    return this->data()[colIndex * this->properties().rows() + rowIndex];
 }
 
 
@@ -587,7 +587,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& row
                                                         const blIntegerType& colIndex,
                                                         const blIntegerType& pageIndex)
 {
-    return this->data()[pageIndex * this->cols() * this->rows() + colIndex * this->rows() + rowIndex];
+    return this->data()[pageIndex * this->properties().cols() * this->properties().rows() + colIndex * this->properties().rows() + rowIndex];
 }
 
 
@@ -600,7 +600,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTyp
                                                               const blIntegerType& colIndex,
                                                               const blIntegerType& pageIndex)const
 {
-    return this->data()[pageIndex * this->cols() * this->rows() + colIndex * this->rows() + rowIndex];
+    return this->data()[pageIndex * this->properties().cols() * this->properties().rows() + colIndex * this->properties().rows() + rowIndex];
 }
 //-------------------------------------------------------------------
 

@@ -437,6 +437,24 @@ inline const std::size_t& blDimensionalProperties::pageOffset()const
 
 
 //-------------------------------------------------------------------
+// Functions used to return the sizes vector
+//-------------------------------------------------------------------
+inline const std::vector<std::size_t>& blDimensionalProperties::sizes()const
+{
+    return m_sizes;
+}
+
+
+
+inline const std::vector<std::size_t>& blDimensionalProperties::lengths()const
+{
+    return m_sizes;
+}
+//-------------------------------------------------------------------
+
+
+
+//-------------------------------------------------------------------
 // Function used to return the number of
 // dimensions that this data lives in
 //-------------------------------------------------------------------
