@@ -67,7 +67,7 @@
 
 // Used to store read iterators
 
-#include "unordered_map"
+#include <unordered_map>
 
 //-------------------------------------------------------------------
 
@@ -97,9 +97,9 @@ public: // Public type aliases
 
 
     using circular_iterator = typename blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circular_iterator;
-    using circular_const_iterator = typename blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circular_const_iterator;
+    using circular_const_iterator = typename blBuffer_7<blDataType,const blDataPtr,const blBufferPtr,const blBufferRoiPtr>::circular_const_iterator;
 
-    using readIteratorsContainerType = std::unordered_map<int,circular_iterator>;
+    using read_iterators_container = std::unordered_map<int,circular_iterator>;
 
 
 
@@ -131,7 +131,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&       operator=(const blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer8) = default;
+    blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&    operator=(const blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer8) = default;
 
 
 
@@ -158,6 +158,7 @@ public: // Public functions
              typename blAnotherDataPtr,
              typename blAnotherBufferPtr,
              typename blAnotherBufferRoiPtr>
+
     std::size_t                             read(const int& id,
                                                  blBuffer_8<blAnotherDataType,blAnotherDataPtr,blAnotherBufferPtr,blAnotherBufferRoiPtr>& outputBuffer);
 
@@ -174,7 +175,7 @@ public: // Public functions
 
 
 
-    // This function reads unformatted
+    // This function reads unformattedreadIteratorsContainerType
     // raw data from this buffer and
     // copies it into the specified buffer
     // The specified "id" invokes the
@@ -205,7 +206,7 @@ private: // Private variables
     // track of the current writing
     // spot
 
-    readIteratorsContainerType              m_readIterators;
+    read_iterators_container                m_readIterators;
 };
 //-------------------------------------------------------------------
 
@@ -456,6 +457,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blOutputIteratorType>
 
 inline std::size_t blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::read(const int& id,

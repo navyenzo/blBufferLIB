@@ -15,7 +15,7 @@
 //                  -- This iterator assumes that the buffer in question
 //                     defines the following functions:
 //
-//                     -- "at" function for random access
+//                     -- "operator[]" function for random access
 //
 //                     -- "size" function for getting the total size
 //                        of the buffer

@@ -89,7 +89,7 @@ public: // Public type aliases
 
 
     using circular_iterator = typename blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circular_iterator;
-    using circular_const_iterator = typename blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circular_const_iterator;
+    using circular_const_iterator = typename blBuffer_6<blDataType,const blDataPtr,const blBufferPtr,const blBufferRoiPtr>::circular_const_iterator;
 
 
 
@@ -121,7 +121,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&       operator=(const blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer7) = default;
+    blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&    operator=(const blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer7) = default;
 
 
 
@@ -173,7 +173,7 @@ public: // Public functions
     std::size_t                             write_value_no_wait(const blValueType* value);
 
     template <typename blBufferType>
-    std::size_t                                          write_buffer_no_wait(const blBufferType& buffer);
+    std::size_t                             write_buffer_no_wait(const blBufferType& buffer);
 
     template <typename blBufferType>
     std::size_t                             write_buffer_no_wait(const blBufferType* buffer,
@@ -365,6 +365,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blValueType>
 
 inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_value(const blValueType& value)
@@ -378,6 +379,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blValueType>
 
 inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_value(const blValueType* value)
@@ -394,6 +396,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blBufferType>
 
 inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_buffer(const blBufferType& buffer)
@@ -407,6 +410,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blBufferType>
 
 inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_buffer(const blBufferType* buffer,
@@ -429,6 +433,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blValueType>
 
 inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_value_no_wait(const blValueType& value)
@@ -442,6 +447,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blValueType>
 
 inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_value_no_wait(const blValueType* value)
@@ -458,6 +464,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blBufferType>
 
 inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_buffer_no_wait(const blBufferType& buffer)
@@ -471,6 +478,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blBufferType>
 
 inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_buffer_no_wait(const blBufferType* buffer,
@@ -705,6 +713,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blInputIteratorType>
 
 inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write(const blInputIteratorType& begin,
@@ -763,6 +772,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blInputIteratorType>
 
 inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_no_wait(const blInputIteratorType& begin,

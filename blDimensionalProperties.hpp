@@ -107,7 +107,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blDimensionalProperties&                operator=(const blDimensionalProperties& bufferSizes) = default;
+    blDimensionalProperties&     operator=(const blDimensionalProperties& bufferSizes) = default;
 
 
 
@@ -119,8 +119,8 @@ public: // Sizes/Lengths functions
     // current total size/length
     // of the buffer
 
-    const std::size_t&                      size()const;
-    const std::size_t&                      length()const;
+    const std::size_t&                                      size()const;
+    const std::size_t&                                      length()const;
 
 
 
@@ -134,15 +134,15 @@ public: // Sizes/Lengths functions
     // size of a col is rows and
     // the size of a row is 1
 
-    std::size_t                             sizeOfSingleUnitInSpecificDimension(const std::size_t& whichDimension)const;
+    std::size_t                                             sizeOfSingleUnitInSpecificDimension(const std::size_t& whichDimension)const;
 
 
 
     // Function used to get the
     // sizes/lengths vector
 
-    const std::vector<std::size_t>&         sizes()const;
-    const std::vector<std::size_t>&         lengths()const;
+    const std::vector<std::size_t>&                         sizes()const;
+    const std::vector<std::size_t>&                         lengths()const;
 
 
 
@@ -150,7 +150,7 @@ public: // Sizes/Lengths functions
     // number of dimensions that
     // this buffer's data lives in
 
-    const std::size_t&                      dimensions()const;
+    const std::size_t&                                      dimensions()const;
 
 
 
@@ -160,16 +160,16 @@ public: // Sizes/Lengths functions
     // used to get the lengths of the
     // first 3 dimensions
 
-    const std::size_t&                      size(const std::size_t& dimension)const;
-    const std::size_t&                      length(const std::size_t& dimension)const;
+    const std::size_t&                                      size(const std::size_t& dimension)const;
+    const std::size_t&                                      length(const std::size_t& dimension)const;
 
-    const std::size_t&                      height()const;
-    const std::size_t&                      width()const;
-    const std::size_t&                      depth()const;
+    const std::size_t&                                      height()const;
+    const std::size_t&                                      width()const;
+    const std::size_t&                                      depth()const;
 
-    const std::size_t&                      rows()const;
-    const std::size_t&                      cols()const;
-    const std::size_t&                      pages()const;
+    const std::size_t&                                      rows()const;
+    const std::size_t&                                      cols()const;
+    const std::size_t&                                      pages()const;
 
 
 
@@ -180,9 +180,9 @@ public: // Sizes/Lengths functions
     // source
 
     template<typename...Lengths>
-    void                                    setDimensionalSizes(const Lengths&...bufferLengths);
-    void                                    setDimensionalSizes(const std::initializer_list<std::size_t>& bufferLengths);
-    void                                    setDimensionalSizes(const std::vector<std::size_t>& bufferLengths);
+    void                                                    setDimensionalSizes(const Lengths&...bufferLengths);
+    void                                                    setDimensionalSizes(const std::initializer_list<std::size_t>& bufferLengths);
+    void                                                    setDimensionalSizes(const std::vector<std::size_t>& bufferLengths);
 
 
 
@@ -191,29 +191,29 @@ public: // Sizes/Lengths functions
     // a Region Of Interest (ROI)
 
     template<typename...Offsets>
-    void                                    setOffsets(const Offsets&...bufferOffsets);
-    void                                    setOffsets(const std::initializer_list<std::size_t>& bufferOffsets);
-    void                                    setOffsets(const std::vector<std::size_t>& bufferOffsets);
+    void                                                    setOffsets(const Offsets&...bufferOffsets);
+    void                                                    setOffsets(const std::initializer_list<std::size_t>& bufferOffsets);
+    void                                                    setOffsets(const std::vector<std::size_t>& bufferOffsets);
 
-    void                                    setOffset(const std::size_t& whichOffset,
-                                                      const std::size_t& offset);
+    void                                                    setOffset(const std::size_t& whichOffset,
+                                                                      const std::size_t& offset);
 
 
 
     // Functions used to get
     // the ROI offsets
 
-    const std::vector<std::size_t>&         offsets()const;
-    const std::size_t&                      offset(const std::size_t& whichOffset)const;
+    const std::vector<std::size_t>&                         offsets()const;
+    const std::size_t&                                      offset(const std::size_t& whichOffset)const;
 
 
     // Functions used to get
     // the offsets in specific
     // dimensions
 
-    const std::size_t&                      rowOffset()const;
-    const std::size_t&                      colOffset()const;
-    const std::size_t&                      pageOffset()const;
+    const std::size_t&                                      rowOffset()const;
+    const std::size_t&                                      colOffset()const;
+    const std::size_t&                                      pageOffset()const;
 
 
 
@@ -221,7 +221,7 @@ private: // Private function used to
          // calculate the total size
          // of the buffer
 
-    void                                    calculateTotalSizeOfBufferAndDefaultMissingOffsets();
+    void                                                    calculateTotalSizeOfBufferAndDefaultMissingOffsets();
 
 
 
@@ -233,13 +233,13 @@ protected: // Protected variables
     // Vector holding the lengths of
     // the buffer in each dimension
 
-    std::vector<std::size_t>                m_sizes;
+    std::vector<std::size_t>                                m_sizes;
 
 
 
     // Total length of the buffer
 
-    std::size_t                             m_size;
+    std::size_t                                             m_size;
 
 
 
@@ -247,14 +247,14 @@ protected: // Protected variables
     // the space represented by
     // these properties
 
-    std::size_t                             m_dimensions;
+    std::size_t                                             m_dimensions;
 
 
 
     // Total length of a single
     // unit for each dimension
 
-    std::vector<std::size_t>                m_sizesOfSingleUnitsInEachDimenion;
+    std::vector<std::size_t>                                m_sizesOfSingleUnitsInEachDimenion;
 
 
 
@@ -263,7 +263,7 @@ protected: // Protected variables
     // where these offsets would be the starting
     // coordinates of the ROI
 
-    std::vector<std::size_t>                m_offsets;
+    std::vector<std::size_t>                                m_offsets;
 };
 //-------------------------------------------------------------------
 
@@ -309,6 +309,7 @@ inline blDimensionalProperties::~blDimensionalProperties()
 // source
 //-------------------------------------------------------------------
 template<typename...Lengths>
+
 inline void blDimensionalProperties::setDimensionalSizes(const Lengths&...bufferLengths)
 {
     // First we initialize
@@ -367,6 +368,7 @@ inline void blDimensionalProperties::setDimensionalSizes(const std::vector<std::
 // a Region Of Interest (ROI)
 //-------------------------------------------------------------------
 template<typename...Offsets>
+
 inline void blDimensionalProperties::setOffsets(const Offsets&...bufferOffsets)
 {
     // First we set the offsets

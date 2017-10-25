@@ -265,6 +265,7 @@ inline void blBuffer_4<blDataType,blDataPtr,blBufferPtr>::resetROI()
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const blIntegerType& dataIndex)
@@ -314,6 +315,7 @@ inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const bl
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const blIntegerType& dataIndex)const
@@ -363,6 +365,7 @@ inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(co
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const blIntegerType& rowIndex,
@@ -376,6 +379,7 @@ inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const bl
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const blIntegerType& rowIndex,
@@ -389,6 +393,7 @@ inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(co
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const blIntegerType& rowIndex,
@@ -403,6 +408,7 @@ inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const bl
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const blIntegerType& rowIndex,
@@ -421,6 +427,7 @@ inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(co
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr>
+
 template<typename...Indexes>
 
 inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const Indexes&...dataIndexes)
@@ -433,6 +440,7 @@ inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const In
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr>
+
 template<typename...Indexes>
 
 inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const Indexes&...dataIndexes)const
@@ -445,6 +453,7 @@ inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(co
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const std::initializer_list<blIntegerType>& dataIndexes)
@@ -462,6 +471,7 @@ inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const st
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const std::initializer_list<blIntegerType>& dataIndexes)const
@@ -479,6 +489,7 @@ inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(co
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const std::vector<blIntegerType>& dataIndexes)
@@ -496,6 +507,7 @@ inline blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const st
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_4<blDataType,blDataPtr,blBufferPtr>::roi_at(const std::vector<blIntegerType>& dataIndexes)const

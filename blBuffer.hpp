@@ -5,14 +5,16 @@
 //-------------------------------------------------------------------
 // FILE:            blBuffer.hpp
 // CLASS:           blBuffer
-// BASE CLASS:      blBuffer0
+// BASE CLASS:      blBuffer_N
+//
+//
 //
 // PURPOSE:         -- Based on blBuffer_N, where N is the last of
 //                     the following classes:
 //
 //                     -- blBuffer_0
 //                     -- blBuffer_2
-//                     -- blBuffer_2
+//                     -- blBuffer_3
 //                           .
 //                           .
 //                           .
@@ -35,9 +37,6 @@
 //                     QVector, sfml images, std::vector, std::array, raw
 //                     dynamic c-arrays, raw static c-arrays and more.
 //
-//                  -- The buffer and all its functions are defined
-//                     within the blBufferLIB namespace.
-//
 //                  -- The buffer also defines a Region Of Interest (ROI) with
 //                     appropriate access functions that allow the user to
 //                     manipulate sub-parts of the buffer as if they were
@@ -47,13 +46,22 @@
 //                     as circular-iterators and circular-ROI-iterators that can
 //                     all work with stl-algorithms
 //
+//                  -- The buffer and all its functions are defined
+//                     within the blBufferLIB namespace
+//
+//
+//
 // AUTHOR:          Vincenzo Barbato
 //                  navyenzo@gmail.com
+//
+//
 //
 // LISENSE:         MIT-LICENCE
 //                  http://www.opensource.org/licenses/mit-license.php
 //
-// DEPENDENCIES:    -- blBuffer4 and all its dependencies
+//
+//
+// DEPENDENCIES:    -- blBuffer_N and all its dependencies
 //-------------------------------------------------------------------
 
 
@@ -80,10 +88,37 @@ namespace blBufferLIB
 
 
 //-------------------------------------------------------------------
+// Useful type aliases to simplify the code
+//-------------------------------------------------------------------
+
+// Standard buffer pointer type
+
+template<typename blDataType,
+         typename blDataPtr = blDataType*>
+
+using blBufferPtrType = blBuffer_2<blDataType,blDataPtr>*;
+
+
+
+// Standard buffer roi pointer type
+
 template<typename blDataType,
          typename blDataPtr = blDataType*,
-         typename blBufferPtr = blBuffer_2<blDataType,blDataPtr>*,
-         typename blBufferRoiPtr = blBuffer_4<blDataType,blDataPtr,blBufferPtr>*>
+         typename blBufferPtr = blBufferPtrType<blDataType> >
+
+using blBufferRoiPtrType = blBuffer_4<blDataType,blDataPtr,blBufferPtr>*;
+
+//-------------------------------------------------------------------
+
+
+
+//-------------------------------------------------------------------
+// blBuffer -- Class definition
+//-------------------------------------------------------------------
+template<typename blDataType,
+         typename blDataPtr = blDataType*,
+         typename blBufferPtr = blBufferPtrType<blDataType>,
+         typename blBufferRoiPtr = blBufferRoiPtrType<blDataType> >
 
 class blBuffer : public blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>
 {
@@ -147,60 +182,6 @@ template<typename blDataType,
 inline blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::~blBuffer()
 {
 }
-//-------------------------------------------------------------------
-
-
-
-//-------------------------------------------------------------------
-// Aliases useful for certain applications
-//-------------------------------------------------------------------
-
-// Alias using boost::offset_ptr
-// useful in using blBuffer in
-// shared memory interprocess
-// communication applications
-
-#ifdef BOOST_INTERPROCESS_OFFSET_PTR_HPP
-
-
-
-template<
-         typename blDataType,
-         typename blDataPtr = boost::interprocess::offset_ptr<blDataType>,
-         typename blBufferPtr = boost::interprocess::offset_ptr< blBuffer_2<blDataType,blDataPtr> >,
-         typename blBufferRoiPtr = boost::interprocess::offset_ptr< blBuffer_4<blDataType,blDataPtr,blBufferPtr> >
-        >
-
-class blSharedMemoryBuffer : public blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>
-{
-public:
-
-
-
-    blSharedMemoryBuffer() : blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>()
-    {
-    }
-
-
-
-    blSharedMemoryBuffer(const blSharedMemoryBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& sharedMemoryBuffer)
-                         : blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>(sharedMemoryBuffer)
-    {
-    }
-
-
-
-    ~blSharedMemoryBuffer()
-    {
-    }
-};
-
-
-
-#endif
-
-
-
 //-------------------------------------------------------------------
 
 

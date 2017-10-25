@@ -84,7 +84,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&       operator=(const blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer6) = default;
+    blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&     operator=(const blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer6) = default;
 
 
 
@@ -169,6 +169,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename...blIntegerType>
 
 inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(const blIntegerType&...bufferLengths)
@@ -184,6 +185,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blIntegerType>
 
 inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(const std::initializer_list<blIntegerType>& bufferLengths)
@@ -199,6 +201,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blIntegerType>
 
 inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(const std::vector<blIntegerType>& bufferLengths)

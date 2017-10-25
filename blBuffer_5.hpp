@@ -82,13 +82,18 @@ public: // Public type aliases
 
 
 
+    using blBuffer_4_type = blBuffer_4<blDataType,blDataPtr,blBufferPtr>;
+    using blBuffer_4_const_type = blBuffer_4<const blDataType,const blDataPtr,const blBufferPtr>;
+
+
+
     // Buffer ROI iterators
 
-    using roi_iterator = blRoiIterator< blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>,blBufferRoiPtr >;
-    using roi_const_iterator = blRoiIterator< blBuffer_5<const blDataType,const blDataPtr,const blBufferPtr,const blBufferRoiPtr>,const blBufferRoiPtr >;
+    using roi_iterator = blRoiIterator< blBuffer_4_type,blBufferRoiPtr >;
+    using roi_const_iterator = blRoiIterator< blBuffer_4_const_type,const blBufferRoiPtr >;
 
-    using roi_reverse_iterator = blRoiReverseIterator< blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>,blBufferRoiPtr >;
-    using roi_const_reverse_iterator = blRoiReverseIterator< blBuffer_5<const blDataType,const blDataPtr,const blBufferPtr,const blBufferRoiPtr>,const blBufferRoiPtr >;
+    using roi_reverse_iterator = blRoiReverseIterator< blBuffer_4_type,blBufferRoiPtr >;
+    using roi_const_reverse_iterator = blRoiReverseIterator< blBuffer_4_const_type,const blBufferRoiPtr >;
 
 
 
@@ -120,7 +125,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&            operator=(const blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer0) = default;
+    blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&        operator=(const blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer0) = default;
 
 
 
@@ -369,7 +374,7 @@ template<typename blDataType,
          typename blBufferRoiPtr>
 
 inline typename blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::roi_iterator blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::roi_iter(const std::ptrdiff_t& startingPositionIndex,
-                                                                                                          const std::ptrdiff_t& maxNumberOfCirculations)
+                                                                                                                                                                const std::ptrdiff_t& maxNumberOfCirculations)
 {
     return roi_iterator(this,startingPositionIndex,maxNumberOfCirculations);
 }
@@ -382,7 +387,7 @@ template<typename blDataType,
          typename blBufferRoiPtr>
 
 inline typename blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::roi_const_iterator blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::roi_citer(const std::ptrdiff_t& startingPositionIndex,
-                                                                                                                 const std::ptrdiff_t& maxNumberOfCirculations)const
+                                                                                                                                                                       const std::ptrdiff_t& maxNumberOfCirculations)const
 {
     return roi_const_iterator(this,startingPositionIndex,maxNumberOfCirculations);
 }
@@ -395,7 +400,7 @@ template<typename blDataType,
          typename blBufferRoiPtr>
 
 inline typename blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::roi_reverse_iterator blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::roi_riter(const std::ptrdiff_t& startingPositionIndex,
-                                                                                                                   const std::ptrdiff_t& maxNumberOfCirculations)
+                                                                                                                                                                         const std::ptrdiff_t& maxNumberOfCirculations)
 {
     return roi_reverse_iterator(this,startingPositionIndex,maxNumberOfCirculations);
 }
@@ -408,7 +413,7 @@ template<typename blDataType,
          typename blBufferRoiPtr>
 
 inline typename blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::roi_const_reverse_iterator blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::roi_criter(const std::ptrdiff_t& startingPositionIndex,
-                                                                                                                          const std::ptrdiff_t& maxNumberOfCirculations)const
+                                                                                                                                                                                const std::ptrdiff_t& maxNumberOfCirculations)const
 {
     return roi_const_reverse_iterator(this,startingPositionIndex,maxNumberOfCirculations);
 }
@@ -423,6 +428,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circ_roi_at(const blIntegerType& dataIndex)
@@ -436,6 +442,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circ_roi_at(const blIntegerType& dataIndex)const
@@ -449,10 +456,11 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circ_roi_at(const blIntegerType &rowIndex,
-                                                                 const blIntegerType &colIndex)
+                                                                                            const blIntegerType &colIndex)
 {
     return this->roi_at( this->circ_index(rowIndex,this->roi().rows()),
                          this->circ_index(colIndex,this->roi().cols()) );
@@ -464,10 +472,11 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circ_roi_at(const blIntegerType& rowIndex,
-                                                                       const blIntegerType& colIndex)const
+                                                                                                  const blIntegerType& colIndex)const
 {
     return this->roi_at( this->circ_index(rowIndex,this->roi().rows()),
                          this->circ_index(colIndex,this->roi().cols()) );
@@ -479,11 +488,12 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circ_roi_at(const blIntegerType& rowIndex,
-                                                                 const blIntegerType& colIndex,
-                                                                 const blIntegerType& pageIndex)
+                                                                                            const blIntegerType& colIndex,
+                                                                                            const blIntegerType& pageIndex)
 {
     return this->roi_at( this->circ_index(rowIndex,this->roi().rows()),
                          this->circ_index(colIndex,this->roi().cols()),
@@ -496,11 +506,12 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circ_roi_at(const blIntegerType& rowIndex,
-                                                                       const blIntegerType& colIndex,
-                                                                       const blIntegerType& pageIndex)const
+                                                                                                  const blIntegerType& colIndex,
+                                                                                                  const blIntegerType& pageIndex)const
 {
     return this->roi_at( this->circ_index(rowIndex,this->roi().rows()),
                          this->circ_index(colIndex,this->roi().cols()),
@@ -517,6 +528,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename...Indexes>
 
 inline blDataType& blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circ_roi_at(const Indexes&...dataIndexes)
@@ -530,6 +542,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename...Indexes>
 
 inline const blDataType& blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circ_roi_at(const Indexes&...dataIndexes)const
@@ -543,6 +556,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circ_roi_at(const std::initializer_list<blIntegerType>& dataIndexes)
@@ -561,6 +575,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circ_roi_at(const std::initializer_list<blIntegerType>& dataIndexes)const
@@ -579,6 +594,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circ_roi_at(const std::vector<blIntegerType>& dataIndexes)
@@ -597,6 +613,7 @@ template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circ_roi_at(const std::vector<blIntegerType>& dataIndexes)const

@@ -96,7 +96,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_0<blDataType>&                 operator=(const blBuffer_0<blDataType>& buffer0) = default;
+    blBuffer_0<blDataType>&                         operator=(const blBuffer_0<blDataType>& buffer0) = default;
 
 
 
@@ -107,11 +107,11 @@ public: // Public functions
     // Functions used to get the
     // buffer's dimensional properties
 
-    const blDimensionalProperties&          properties()const;
+    const blDimensionalProperties&                  properties()const;
 
-    const std::size_t&                      size()const;
+    const std::size_t&                              size()const;
 
-    const std::size_t&                      size(const std::size_t& dimension)const;
+    const std::size_t&                              size(const std::size_t& dimension)const;
 
 
 
@@ -125,14 +125,14 @@ protected: // Protected variables
     // if the buffer owns the
     // data
 
-    std::vector<blDataType>                 m_data;
+    std::vector<blDataType>                         m_data;
 
 
 
     // The dimensional properties
     // of this buffer
 
-    blDimensionalProperties                 m_properties;
+    blDimensionalProperties                         m_properties;
 };
 //-------------------------------------------------------------------
 
@@ -142,6 +142,7 @@ protected: // Protected variables
 // Default constructor
 //-------------------------------------------------------------------
 template<typename blDataType>
+
 inline blBuffer_0<blDataType>::blBuffer_0()
 {
 }
@@ -153,6 +154,7 @@ inline blBuffer_0<blDataType>::blBuffer_0()
 // Destructor
 //-------------------------------------------------------------------
 template<typename blDataType>
+
 inline blBuffer_0<blDataType>::~blBuffer_0()
 {
 }
@@ -164,6 +166,7 @@ inline blBuffer_0<blDataType>::~blBuffer_0()
 // Function used to get the buffer's properties
 //-------------------------------------------------------------------
 template<typename blDataType>
+
 inline const blDimensionalProperties& blBuffer_0<blDataType>::properties()const
 {
     return m_properties;
@@ -178,6 +181,7 @@ inline const blDimensionalProperties& blBuffer_0<blDataType>::properties()const
 // get the buffer's properties
 //-------------------------------------------------------------------
 template<typename blDataType>
+
 inline const std::size_t& blBuffer_0<blDataType>::size()const
 {
     return m_properties.size();
@@ -192,6 +196,7 @@ inline const std::size_t& blBuffer_0<blDataType>::size()const
 // having to first get the buffer's properties
 //-------------------------------------------------------------------
 template<typename blDataType>
+
 inline const std::size_t& blBuffer_0<blDataType>::size(const std::size_t&  dimension)const
 {
     return m_properties.size(dimension);

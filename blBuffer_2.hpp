@@ -87,7 +87,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_2<blDataType,blDataPtr>&       operator=(const blBuffer_2<blDataType,blDataPtr>& buffer2) = default;
+    blBuffer_2<blDataType,blDataPtr>&               operator=(const blBuffer_2<blDataType,blDataPtr>& buffer2) = default;
 
 
 
@@ -98,38 +98,38 @@ public: // Access operators
     // operator[]
 
     template<typename blIntegerType>
-    blDataType&                             operator[](const blIntegerType& dataIndex);
+    blDataType&                                     operator[](const blIntegerType& dataIndex);
 
     template<typename blIntegerType>
-    const blDataType&                       operator[](const blIntegerType& dataIndex)const;
+    const blDataType&                               operator[](const blIntegerType& dataIndex)const;
 
 
 
     // operator()
 
     template<typename blIntegerType>
-    blDataType&                             operator()(const blIntegerType& dataIndex);
+    blDataType&                                     operator()(const blIntegerType& dataIndex);
 
     template<typename blIntegerType>
-    const blDataType&                       operator()(const blIntegerType& dataIndex)const;
+    const blDataType&                               operator()(const blIntegerType& dataIndex)const;
 
     template<typename blIntegerType>
-    blDataType&                             operator()(const blIntegerType& rowIndex,
-                                                       const blIntegerType& colIndex);
+    blDataType&                                     operator()(const blIntegerType& rowIndex,
+                                                               const blIntegerType& colIndex);
 
     template<typename blIntegerType>
-    const blDataType&                       operator()(const blIntegerType& rowIndex,
-                                                       const blIntegerType& colIndex)const;
+    const blDataType&                               operator()(const blIntegerType& rowIndex,
+                                                               const blIntegerType& colIndex)const;
 
     template<typename blIntegerType>
-    blDataType&                             operator()(const blIntegerType& rowIndex,
-                                                       const blIntegerType& colIndex,
-                                                       const blIntegerType& pageIndex);
+    blDataType&                                     operator()(const blIntegerType& rowIndex,
+                                                               const blIntegerType& colIndex,
+                                                               const blIntegerType& pageIndex);
 
     template<typename blIntegerType>
-    const blDataType&                       operator()(const blIntegerType& rowIndex,
-                                                       const blIntegerType& colIndex,
-                                                       const blIntegerType& pageIndex)const;
+    const blDataType&                               operator()(const blIntegerType& rowIndex,
+                                                               const blIntegerType& colIndex,
+                                                               const blIntegerType& pageIndex)const;
 
 
 
@@ -137,22 +137,22 @@ public: // Access operators
     // operator()
 
     template<typename...blIntegerTypes>
-    blDataType&                             operator()(const blIntegerTypes&...dataIndexes);
+    blDataType&                                     operator()(const blIntegerTypes&...dataIndexes);
 
     template<typename...blIntegerTypes>
-    const blDataType&                       operator()(const blIntegerTypes&...dataIndexes)const;
+    const blDataType&                               operator()(const blIntegerTypes&...dataIndexes)const;
 
     template<typename blIntegerType>
-    blDataType&                             operator()(const std::initializer_list<blIntegerType>& dataIndexes);
+    blDataType&                                     operator()(const std::initializer_list<blIntegerType>& dataIndexes);
 
     template<typename blIntegerType>
-    const blDataType&                       operator()(const std::initializer_list<blIntegerType>& dataIndexes)const;
+    const blDataType&                               operator()(const std::initializer_list<blIntegerType>& dataIndexes)const;
 
     template<typename blIntegerType>
-    blDataType&                             operator()(const std::vector<blIntegerType>& dataIndexes);
+    blDataType&                                     operator()(const std::vector<blIntegerType>& dataIndexes);
 
     template<typename blIntegerType>
-    const blDataType&                       operator()(const std::vector<blIntegerType>& dataIndexes)const;
+    const blDataType&                               operator()(const std::vector<blIntegerType>& dataIndexes)const;
 
 
 
@@ -165,28 +165,28 @@ public: // Public functions
     // do not check for out of bound indexes
 
     template<typename blIntegerType>
-    blDataType&                             at(const blIntegerType& dataIndex);
+    blDataType&                                     at(const blIntegerType& dataIndex);
 
     template<typename blIntegerType>
-    const blDataType&                       at(const blIntegerType& dataIndex)const;
+    const blDataType&                               at(const blIntegerType& dataIndex)const;
 
     template<typename blIntegerType>
-    blDataType&                             at(const blIntegerType& rowIndex,
-                                               const blIntegerType& colIndex);
+    blDataType&                                     at(const blIntegerType& rowIndex,
+                                                       const blIntegerType& colIndex);
 
     template<typename blIntegerType>
-    const blDataType&                       at(const blIntegerType& rowIndex,
-                                               const blIntegerType& colIndex)const;
+    const blDataType&                               at(const blIntegerType& rowIndex,
+                                                       const blIntegerType& colIndex)const;
 
     template<typename blIntegerType>
-    blDataType&                             at(const blIntegerType& rowIndex,
-                                               const blIntegerType& colIndex,
-                                               const blIntegerType& pageIndex);
+    blDataType&                                     at(const blIntegerType& rowIndex,
+                                                       const blIntegerType& colIndex,
+                                                       const blIntegerType& pageIndex);
 
     template<typename blIntegerType>
-    const blDataType&                       at(const blIntegerType& rowIndex,
-                                               const blIntegerType& colIndex,
-                                               const blIntegerType& pageIndex)const;
+    const blDataType&                               at(const blIntegerType& rowIndex,
+                                                       const blIntegerType& colIndex,
+                                                       const blIntegerType& pageIndex)const;
 
 
 
@@ -194,22 +194,22 @@ public: // Public functions
     // at functions
 
     template<typename...blIntegerTypes>
-    blDataType&                             at(const blIntegerTypes&...dataIndexes);
+    blDataType&                                     at(const blIntegerTypes&...dataIndexes);
 
     template<typename...blIntegerTypes>
-    const blDataType&                       at(const blIntegerTypes&...dataIndexes)const;
+    const blDataType&                               at(const blIntegerTypes&...dataIndexes)const;
 
     template<typename blIntegerType>
-    blDataType&                             at(const std::initializer_list<blIntegerType>& dataIndexes);
+    blDataType&                                     at(const std::initializer_list<blIntegerType>& dataIndexes);
 
     template<typename blIntegerType>
-    const blDataType&                       at(const std::initializer_list<blIntegerType>& dataIndexes)const;
+    const blDataType&                               at(const std::initializer_list<blIntegerType>& dataIndexes)const;
 
     template<typename blIntegerType>
-    blDataType&                             at(const std::vector<blIntegerType>& dataIndexes);
+    blDataType&                                     at(const std::vector<blIntegerType>& dataIndexes);
 
     template<typename blIntegerType>
-    const blDataType&                       at(const std::vector<blIntegerType>& dataIndexes)const;
+    const blDataType&                               at(const std::vector<blIntegerType>& dataIndexes)const;
 };
 //-------------------------------------------------------------------
 
@@ -246,6 +246,7 @@ inline blBuffer_2<blDataType,blDataPtr>::~blBuffer_2()
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator[](const blIntegerType& dataIndex)
@@ -257,6 +258,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator[](const blIntegerT
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator[](const blIntegerType& dataIndex)const
@@ -272,6 +274,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator[](const blIn
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& dataIndex)
@@ -283,6 +286,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerT
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& dataIndex)const
@@ -294,6 +298,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIn
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& rowIndex,
@@ -306,6 +311,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerT
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& rowIndex,
@@ -318,6 +324,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIn
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& rowIndex,
@@ -331,6 +338,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerT
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& rowIndex,
@@ -348,6 +356,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIn
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename...blIntegerTypes>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerTypes&...dataIndexes)
@@ -359,6 +368,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerT
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename...blIntegerTypes>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerTypes&...dataIndexes)const
@@ -370,6 +380,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIn
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std::initializer_list<blIntegerType>& dataIndexes)
@@ -410,6 +421,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std::initi
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std::initializer_list<blIntegerType>& dataIndexes)const
@@ -450,6 +462,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std:
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std::vector<blIntegerType>& dataIndexes)
@@ -490,6 +503,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std::vecto
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std::vector<blIntegerType>& dataIndexes)const
@@ -535,6 +549,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std:
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& dataIndex)
@@ -546,6 +561,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& dat
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& dataIndex)const
@@ -557,6 +573,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTyp
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& rowIndex,
@@ -569,6 +586,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& row
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& rowIndex,
@@ -581,6 +599,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTyp
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& rowIndex,
@@ -594,6 +613,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& row
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& rowIndex,
@@ -611,6 +631,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTyp
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename...blIntegerTypes>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTypes&...dataIndexes)
@@ -622,6 +643,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTypes&...
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename...blIntegerTypes>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTypes&...dataIndexes)const
@@ -633,6 +655,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTyp
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::initializer_list<blIntegerType>& dataIndexes)
@@ -673,6 +696,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::initializer_l
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::initializer_list<blIntegerType>& dataIndexes)const
@@ -713,6 +737,7 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::initial
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::vector<blIntegerType>& dataIndexes)
@@ -753,6 +778,7 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::vector<blInte
 
 template<typename blDataType,
          typename blDataPtr>
+
 template<typename blIntegerType>
 
 inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::vector<blIntegerType>& dataIndexes)const

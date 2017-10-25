@@ -86,7 +86,7 @@ public: // Public type aliases
     using const_iterator = const blDataPtr;
 
     using reverse_iterator = blReverseIterator<blDataType,blDataPtr>;
-    using const_reverse_iterator = blReverseIterator<const blDataType,const blDataPtr>;
+    using const_reverse_iterator = blReverseIterator<blDataType,const blDataPtr>;
 
 
 
@@ -118,7 +118,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_1<blDataType,blDataPtr>&       operator=(const blBuffer_1<blDataType,blDataPtr>& buffer1) = default;
+    blBuffer_1<blDataType,blDataPtr>&               operator=(const blBuffer_1<blDataType,blDataPtr>& buffer1) = default;
 
 
 
@@ -131,8 +131,8 @@ public: // Public functions
     // buffer, not dereferenceable when
     // buffer is empty
 
-    blDataPtr                               data();
-    const blDataPtr                         data()const;
+    blDataPtr                                       data();
+    const blDataPtr                                 data()const;
 
 
 
@@ -142,8 +142,8 @@ public: // Public functions
     // again the pointer is not derefenceable
     // when buffer is empty
 
-    unsigned char*                          dataBytes();
-    const unsigned char*                    dataBytes()const;
+    unsigned char*                                  dataBytes();
+    const unsigned char*                            dataBytes()const;
 
 
 
@@ -155,7 +155,7 @@ public: // Public functions
     // data that is of different type than
     // "blDataType"
 
-    const std::size_t&                      sizeOfSingleDataPoint()const;
+    const std::size_t&                              sizeOfSingleDataPoint()const;
 
 
 
@@ -164,15 +164,15 @@ public: // Public functions
     // "first" element of the array and
     // its "end"
 
-    iterator                                begin();
-    iterator                                end();
-    const_iterator                          cbegin()const;
-    const_iterator                          cend()const;
+    iterator                                        begin();
+    iterator                                        end();
+    const_iterator                                  cbegin()const;
+    const_iterator                                  cend()const;
 
-    reverse_iterator                        rbegin();
-    reverse_iterator                        rend();
-    const_reverse_iterator                  crbegin()const;
-    const_reverse_iterator                  crend()const;
+    reverse_iterator                                rbegin();
+    reverse_iterator                                rend();
+    const_reverse_iterator                          crbegin()const;
+    const_reverse_iterator                          crend()const;
 
 
 
@@ -183,7 +183,7 @@ public: // Public functions
     // whether the buffer owns the data
     // it's currently working with
 
-    bool                                    doesBufferOwnData()const;
+    bool                                            doesBufferOwnData()const;
 
 
 
@@ -198,29 +198,29 @@ public: // Public functions
 
     template<typename blExistingDataType,
              typename...blIntegerType>
-    void                                    wrap(blExistingDataType& data,
-                                                 const blIntegerType&... bufferLengths);
+    void                                            wrap(blExistingDataType& data,
+                                                         const blIntegerType&... bufferLengths);
 
     template<typename blExistingDataType>
-    void                                    wrap(blExistingDataType& data,
-                                                 const std::initializer_list<std::size_t>& bufferLengths);
+    void                                            wrap(blExistingDataType& data,
+                                                         const std::initializer_list<std::size_t>& bufferLengths);
 
     template<typename blExistingDataType>
-    void                                    wrap(blExistingDataType& data,
-                                                 const std::vector<std::size_t>& bufferLengths);
+    void                                            wrap(blExistingDataType& data,
+                                                         const std::vector<std::size_t>& bufferLengths);
 
     template<typename blExistingDataType,
              typename...blIntegerType>
-    void                                    wrap(blExistingDataType* dataPointer,
-                                                 const blIntegerType&... bufferLengths);
+    void                                            wrap(blExistingDataType* dataPointer,
+                                                         const blIntegerType&... bufferLengths);
 
     template<typename blExistingDataType>
-    void                                    wrap(blExistingDataType* dataPointer,
-                                                 const std::initializer_list<std::size_t>& bufferLengths);
+    void                                            wrap(blExistingDataType* dataPointer,
+                                                         const std::initializer_list<std::size_t>& bufferLengths);
 
     template<typename blExistingDataType>
-    void                                    wrap(blExistingDataType* dataPointer,
-                                                 const std::vector<std::size_t>& bufferLengths);
+    void                                            wrap(blExistingDataType* dataPointer,
+                                                         const std::vector<std::size_t>& bufferLengths);
 
 
 
@@ -228,7 +228,7 @@ public: // Public functions
     // pointer to point to the buffer's
     // first element
 
-    void                                    resetDataPointers();
+    void                                            resetDataPointers();
 
 
 
@@ -245,11 +245,11 @@ private: // Private variables
     //    buffer is wrapping data from an
     //    external source
 
-    iterator                                m_begin;
-    iterator                                m_end;
+    iterator                                        m_begin;
+    iterator                                        m_end;
 
-    reverse_iterator                        m_rbegin;
-    reverse_iterator                        m_rend;
+    reverse_iterator                                m_rbegin;
+    reverse_iterator                                m_rend;
 
 
 
@@ -257,7 +257,7 @@ private: // Private variables
     // when wrapping external data of different
     // type than "blDataPoint"
 
-    std::size_t                             m_sizeOfSingleDataPoint;
+    std::size_t                                     m_sizeOfSingleDataPoint;
 };
 //-------------------------------------------------------------------
 
@@ -299,7 +299,7 @@ inline blBuffer_1<blDataType,blDataPtr>::~blBuffer_1()
 
 
 //-------------------------------------------------------------------
-// wrap -- used to wrap data from an external source
+// wrap functions -- used to wrap data from an external source
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr>
@@ -433,6 +433,11 @@ inline void blBuffer_1<blDataType,blDataPtr>::wrap(blExistinDataType* dataPointe
 
 
 //-------------------------------------------------------------------
+// Function used to reset the data pointers
+// so that they point at buffer's internal
+// data in case they were originally pointing
+// to some external data source
+//-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr>
 
@@ -471,6 +476,10 @@ inline void blBuffer_1<blDataType,blDataPtr>::resetDataPointers()
 
 
 
+//-------------------------------------------------------------------
+// Function used to know if the buffer is pointing
+// to its own internal data or handling data from
+// an external source
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr>
