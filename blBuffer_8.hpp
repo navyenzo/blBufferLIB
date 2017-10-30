@@ -88,16 +88,17 @@ namespace blBufferLIB
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-class blBuffer_8 : public blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>
+class blBuffer_8 : public blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>
 {
 public: // Public type aliases
 
 
 
-    using circular_iterator = typename blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circular_iterator;
-    using circular_const_iterator = typename blBuffer_7<blDataType,const blDataPtr,const blBufferPtr,const blBufferRoiPtr>::circular_const_iterator;
+    using circular_iterator = typename blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::circular_iterator;
+    using circular_const_iterator = typename blBuffer_7<blDataType,const blDataPtr,const blBufferPtr,const blBufferRoiPtr,blMaxNumOfDimensions>::circular_const_iterator;
 
     using read_iterators_container = std::unordered_map<int,circular_iterator>;
 
@@ -115,7 +116,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blBuffer_8(const blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer8) = default;
+    blBuffer_8(const blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>& buffer8) = default;
 
 
 
@@ -131,7 +132,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&    operator=(const blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer8) = default;
+    blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>&   operator=(const blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>& buffer8) = default;
 
 
 
@@ -146,7 +147,7 @@ public: // Public functions
     // and initializes it to start at
     // the beginning of the buffer
 
-    circular_iterator&                      readIterator(const int& id);
+    circular_iterator&                                                      readIterator(const int& id);
 
 
 
@@ -157,10 +158,11 @@ public: // Public functions
     template<typename blAnotherDataType,
              typename blAnotherDataPtr,
              typename blAnotherBufferPtr,
-             typename blAnotherBufferRoiPtr>
+             typename blAnotherBufferRoiPtr,
+             std::size_t blDifferentMaxNumOfDimensions>
 
-    std::size_t                             read(const int& id,
-                                                 blBuffer_8<blAnotherDataType,blAnotherDataPtr,blAnotherBufferPtr,blAnotherBufferRoiPtr>& outputBuffer);
+    std::size_t                                                             read(const int& id,
+                                                                                 blBuffer_8<blAnotherDataType,blAnotherDataPtr,blAnotherBufferPtr,blAnotherBufferRoiPtr,blDifferentMaxNumOfDimensions>& outputBuffer);
 
 
 
@@ -169,9 +171,9 @@ public: // Public functions
     // buffer given by output iterators
 
     template<typename blOutputIteratorType>
-    std::size_t                             read(const int& id,
-                                                 const blOutputIteratorType& begin,
-                                                 const blOutputIteratorType& end);
+    std::size_t                                                             read(const int& id,
+                                                                                 const blOutputIteratorType& begin,
+                                                                                 const blOutputIteratorType& end);
 
 
 
@@ -181,9 +183,9 @@ public: // Public functions
     // The specified "id" invokes the
     // corresponding read(id) iterator
 
-    std::size_t                             read(const int& id,
-                                                 char* outputBuffer,
-                                                 const std::size_t& outputBufferLength);
+    std::size_t                                                             read(const int& id,
+                                                                                 char* outputBuffer,
+                                                                                 const std::size_t& outputBufferLength);
 
 
 
@@ -194,7 +196,7 @@ public: // Public functions
     // it won't mistakingly read the same
     // data over and over
 
-    void                                    adjustReadIterator(circular_iterator& readIter);
+    void                                                                    adjustReadIterator(circular_iterator& readIter);
 
 
 
@@ -206,7 +208,7 @@ private: // Private variables
     // track of the current writing
     // spot
 
-    read_iterators_container                m_readIterators;
+    read_iterators_container                                                m_readIterators;
 };
 //-------------------------------------------------------------------
 
@@ -218,9 +220,10 @@ private: // Private variables
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer_8() : blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>()
+inline blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::blBuffer_8() : blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>()
 {
 }
 //-------------------------------------------------------------------
@@ -233,9 +236,10 @@ inline blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer_8()
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::~blBuffer_8()
+inline blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::~blBuffer_8()
 {
 }
 //-------------------------------------------------------------------
@@ -253,9 +257,10 @@ inline blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::~blBuffer_8(
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circular_iterator& blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::readIterator(const int& id)
+inline typename blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::circular_iterator& blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::readIterator(const int& id)
 {
     // First we have to check if
     // the specified read(id) iterator
@@ -330,9 +335,10 @@ inline typename blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::cir
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline void blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::adjustReadIterator(circular_iterator& readIter)
+inline void blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::adjustReadIterator(circular_iterator& readIter)
 {
     // We compare the current number
     // of circulations of the write
@@ -395,15 +401,17 @@ inline void blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::adjustR
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blAnotherDataType,
          typename blAnotherDataPtr,
          typename blAnotherBufferPtr,
-         typename blAnotherBufferRoiPtr>
+         typename blAnotherBufferRoiPtr,
+         std::size_t blDifferentMaxNumOfDimensions>
 
-inline std::size_t blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::read(const int& id,
-                                                                                     blBuffer_8<blAnotherDataType,blAnotherDataPtr,blAnotherBufferPtr,blAnotherBufferRoiPtr>& outputBuffer)
+inline std::size_t blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::read(const int& id,
+                                                                                                          blBuffer_8<blAnotherDataType,blAnotherDataPtr,blAnotherBufferPtr,blAnotherBufferRoiPtr,blDifferentMaxNumOfDimensions>& outputBuffer)
 {
     // First we grab a hold of
     // the corresponding read(id)
@@ -456,13 +464,14 @@ inline std::size_t blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blOutputIteratorType>
 
-inline std::size_t blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::read(const int& id,
-                                                                                     const blOutputIteratorType& beginOutput,
-                                                                                     const blOutputIteratorType& endOutput)
+inline std::size_t blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::read(const int& id,
+                                                                                                          const blOutputIteratorType& beginOutput,
+                                                                                                          const blOutputIteratorType& endOutput)
 {
     // First we grab a hold of
     // the corresponding read(id)
@@ -522,11 +531,12 @@ inline std::size_t blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline std::size_t blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::read(const int& id,
-                                                                                     char* outputBuffer,
-                                                                                     const std::size_t& outputBufferLength)
+inline std::size_t blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::read(const int& id,
+                                                                                                          char* outputBuffer,
+                                                                                                          const std::size_t& outputBufferLength)
 {
     // First we grab a hold of
     // the corresponding read(id)

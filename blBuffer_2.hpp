@@ -55,9 +55,10 @@ namespace blBufferLIB
 // class blBuffer_2 declaration
 //-------------------------------------------------------------------
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
-class blBuffer_2 : public blBuffer_1<blDataType,blDataPtr>
+class blBuffer_2 : public blBuffer_1<blDataType,blDataPtr,blMaxNumOfDimensions>
 {
 public: // Constructors and destructors
 
@@ -71,7 +72,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blBuffer_2(const blBuffer_2<blDataType,blDataPtr>& buffer2) = default;
+    blBuffer_2(const blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>& buffer2) = default;
 
 
 
@@ -87,7 +88,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_2<blDataType,blDataPtr>&               operator=(const blBuffer_2<blDataType,blDataPtr>& buffer2) = default;
+    blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>&               operator=(const blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>& buffer2) = default;
 
 
 
@@ -95,7 +96,7 @@ public: // Access operators
 
 
 
-    // operator[]
+    // Access operators
 
     template<typename blIntegerType>
     blDataType&                                     operator[](const blIntegerType& dataIndex);
@@ -219,9 +220,10 @@ public: // Public functions
 // Default constructor
 //-------------------------------------------------------------------
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline blBuffer_2<blDataType,blDataPtr>::blBuffer_2() : blBuffer_1<blDataType,blDataPtr>()
+inline blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::blBuffer_2() : blBuffer_1<blDataType,blDataPtr,blMaxNumOfDimensions>()
 {
 }
 //-------------------------------------------------------------------
@@ -232,9 +234,10 @@ inline blBuffer_2<blDataType,blDataPtr>::blBuffer_2() : blBuffer_1<blDataType,bl
 // Destructor
 //-------------------------------------------------------------------
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline blBuffer_2<blDataType,blDataPtr>::~blBuffer_2()
+inline blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::~blBuffer_2()
 {
 }
 //-------------------------------------------------------------------
@@ -245,11 +248,12 @@ inline blBuffer_2<blDataType,blDataPtr>::~blBuffer_2()
 // operator[]
 //-------------------------------------------------------------------
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator[](const blIntegerType& dataIndex)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator[](const blIntegerType& dataIndex)
 {
     return this->data()[static_cast<std::size_t>(dataIndex)];
 }
@@ -257,11 +261,12 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator[](const blIntegerT
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator[](const blIntegerType& dataIndex)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator[](const blIntegerType& dataIndex)const
 {
     return this->data()[static_cast<std::size_t>(dataIndex)];
 }
@@ -273,11 +278,12 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator[](const blIn
 // operator()
 //-------------------------------------------------------------------
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& dataIndex)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator()(const blIntegerType& dataIndex)
 {
     return this->data()[dataIndex];
 }
@@ -285,11 +291,12 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerT
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& dataIndex)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator()(const blIntegerType& dataIndex)const
 {
     return this->data()[dataIndex];
 }
@@ -297,12 +304,13 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIn
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& rowIndex,
-                                                                const blIntegerType& colIndex)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator()(const blIntegerType& rowIndex,
+                                                                                     const blIntegerType& colIndex)
 {
     return this->data()[colIndex * this->properties().rows() + rowIndex];
 }
@@ -310,12 +318,13 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerT
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& rowIndex,
-                                                                      const blIntegerType& colIndex)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator()(const blIntegerType& rowIndex,
+                                                                                           const blIntegerType& colIndex)const
 {
     return this->data()[colIndex * this->properties().rows() + rowIndex];
 }
@@ -323,13 +332,14 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIn
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& rowIndex,
-                                                                const blIntegerType& colIndex,
-                                                                const blIntegerType& pageIndex)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator()(const blIntegerType& rowIndex,
+                                                                                     const blIntegerType& colIndex,
+                                                                                     const blIntegerType& pageIndex)
 {
     return this->data()[pageIndex * this->properties().cols() * this->properties().rows() + colIndex * this->properties().rows() + rowIndex];
 }
@@ -337,13 +347,14 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerT
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerType& rowIndex,
-                                                                      const blIntegerType& colIndex,
-                                                                      const blIntegerType& pageIndex)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator()(const blIntegerType& rowIndex,
+                                                                                           const blIntegerType& colIndex,
+                                                                                           const blIntegerType& pageIndex)const
 {
     return this->data()[pageIndex * this->properties().cols() * this->properties().rows() + colIndex * this->properties().rows() + rowIndex];
 }
@@ -355,11 +366,12 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIn
 // Generic versions of operator()
 //-------------------------------------------------------------------
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename...blIntegerTypes>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerTypes&...dataIndexes)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator()(const blIntegerTypes&...dataIndexes)
 {
     return this->at({dataIndexes...});
 }
@@ -367,11 +379,12 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerT
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename...blIntegerTypes>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIntegerTypes&...dataIndexes)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator()(const blIntegerTypes&...dataIndexes)const
 {
     return this->at({dataIndexes...});
 }
@@ -379,11 +392,12 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const blIn
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std::initializer_list<blIntegerType>& dataIndexes)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator()(const std::initializer_list<blIntegerType>& dataIndexes)
 {
     std::size_t dataIndex = 0;
 
@@ -420,11 +434,12 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std::initi
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std::initializer_list<blIntegerType>& dataIndexes)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator()(const std::initializer_list<blIntegerType>& dataIndexes)const
 {
     std::size_t dataIndex = 0;
 
@@ -461,11 +476,12 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std:
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std::vector<blIntegerType>& dataIndexes)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator()(const std::vector<blIntegerType>& dataIndexes)
 {
     std::size_t dataIndex = 0;
 
@@ -502,11 +518,12 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std::vecto
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std::vector<blIntegerType>& dataIndexes)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::operator()(const std::vector<blIntegerType>& dataIndexes)const
 {
     std::size_t dataIndex = 0;
 
@@ -548,11 +565,12 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::operator()(const std:
 //                 are out of bounds)
 //-------------------------------------------------------------------
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& dataIndex)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::at(const blIntegerType& dataIndex)
 {
     return this->data()[dataIndex];
 }
@@ -560,11 +578,12 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& dat
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& dataIndex)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::at(const blIntegerType& dataIndex)const
 {
     return this->data()[dataIndex];
 }
@@ -572,12 +591,13 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTyp
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& rowIndex,
-                                                        const blIntegerType& colIndex)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::at(const blIntegerType& rowIndex,
+                                                                             const blIntegerType& colIndex)
 {
     return this->data()[colIndex * this->properties().rows() + rowIndex];
 }
@@ -585,12 +605,13 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& row
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& rowIndex,
-                                                              const blIntegerType& colIndex)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::at(const blIntegerType& rowIndex,
+                                                                                   const blIntegerType& colIndex)const
 {
     return this->data()[colIndex * this->properties().rows() + rowIndex];
 }
@@ -598,13 +619,14 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTyp
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& rowIndex,
-                                                        const blIntegerType& colIndex,
-                                                        const blIntegerType& pageIndex)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::at(const blIntegerType& rowIndex,
+                                                                             const blIntegerType& colIndex,
+                                                                             const blIntegerType& pageIndex)
 {
     return this->data()[pageIndex * this->properties().cols() * this->properties().rows() + colIndex * this->properties().rows() + rowIndex];
 }
@@ -612,13 +634,14 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& row
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerType& rowIndex,
-                                                              const blIntegerType& colIndex,
-                                                              const blIntegerType& pageIndex)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::at(const blIntegerType& rowIndex,
+                                                                                   const blIntegerType& colIndex,
+                                                                                   const blIntegerType& pageIndex)const
 {
     return this->data()[pageIndex * this->properties().cols() * this->properties().rows() + colIndex * this->properties().rows() + rowIndex];
 }
@@ -630,11 +653,12 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTyp
 // Generic versions of at functions
 //-------------------------------------------------------------------
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename...blIntegerTypes>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTypes&...dataIndexes)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::at(const blIntegerTypes&...dataIndexes)
 {
     return this->at({dataIndexes...});
 }
@@ -642,11 +666,12 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTypes&...
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename...blIntegerTypes>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTypes&...dataIndexes)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::at(const blIntegerTypes&...dataIndexes)const
 {
     return this->at({dataIndexes...});
 }
@@ -654,11 +679,12 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const blIntegerTyp
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::initializer_list<blIntegerType>& dataIndexes)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::at(const std::initializer_list<blIntegerType>& dataIndexes)
 {
     std::size_t dataIndex = 0;
 
@@ -695,11 +721,12 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::initializer_l
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::initializer_list<blIntegerType>& dataIndexes)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::at(const std::initializer_list<blIntegerType>& dataIndexes)const
 {
     std::size_t dataIndex = 0;
 
@@ -736,11 +763,12 @@ inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::initial
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::vector<blIntegerType>& dataIndexes)
+inline blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::at(const std::vector<blIntegerType>& dataIndexes)
 {
     std::size_t dataIndex = 0;
 
@@ -777,11 +805,12 @@ inline blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::vector<blInte
 
 
 template<typename blDataType,
-         typename blDataPtr>
+         typename blDataPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_2<blDataType,blDataPtr>::at(const std::vector<blIntegerType>& dataIndexes)const
+inline const blDataType& blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>::at(const std::vector<blIntegerType>& dataIndexes)const
 {
     std::size_t dataIndex = 0;
 

@@ -52,9 +52,10 @@ namespace blBufferLIB
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-class blBuffer_6 : public blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>
+class blBuffer_6 : public blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>
 {
 public: // Constructors and destructors
 
@@ -68,7 +69,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blBuffer_6(const blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer6) = default;
+    blBuffer_6(const blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>& buffer6) = default;
 
 
 
@@ -84,7 +85,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&     operator=(const blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer6) = default;
+    blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>&   operator=(const blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>& buffer6) = default;
 
 
 
@@ -110,13 +111,17 @@ public: // Create functions used to
     //    of the function
 
     template<typename...blIntegerType>
-    bool                                    create(const blIntegerType&... bufferLengths);
+    bool                                                                    create(const blIntegerType&... bufferLengths);
 
     template<typename blIntegerType>
-    bool                                    create(const std::initializer_list<blIntegerType>& bufferLengths);
+    bool                                                                    create(const std::initializer_list<blIntegerType>& bufferLengths);
 
     template<typename blIntegerType>
-    bool                                    create(const std::vector<blIntegerType>& bufferLengths);
+    bool                                                                    create(const std::vector<blIntegerType>& bufferLengths);
+
+    template<typename blIntegerType,
+             std::size_t blNumberOfDimensions>
+    bool                                                                    create(const std::array<blIntegerType,blNumberOfDimensions>& bufferLengths);
 
 
 
@@ -125,7 +130,7 @@ private: // Create function that does the
          // This function gets called by the
          // other create functions
 
-    bool                                    create();
+    bool                                                                    create();
 };
 //-------------------------------------------------------------------
 
@@ -137,9 +142,10 @@ private: // Create function that does the
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer_6() : blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>()
+inline blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::blBuffer_6() : blBuffer_5<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>()
 {
 }
 //-------------------------------------------------------------------
@@ -152,9 +158,10 @@ inline blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer_6()
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::~blBuffer_6()
+inline blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::~blBuffer_6()
 {
 }
 //-------------------------------------------------------------------
@@ -168,11 +175,12 @@ inline blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::~blBuffer_6(
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename...blIntegerType>
 
-inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(const blIntegerType&...bufferLengths)
+inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::create(const blIntegerType&...bufferLengths)
 {
     this->m_properties.setDimensionalSizes({static_cast<std::size_t>(bufferLengths)...});
 
@@ -184,11 +192,12 @@ inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(const std::initializer_list<blIntegerType>& bufferLengths)
+inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::create(const std::initializer_list<blIntegerType>& bufferLengths)
 {
     this->m_properties.setDimensionalSizes(bufferLengths);
 
@@ -200,11 +209,30 @@ inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(const std::vector<blIntegerType>& bufferLengths)
+inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::create(const std::vector<blIntegerType>& bufferLengths)
+{
+    this->m_properties.setDimensionalSizes(bufferLengths);
+
+    return create();
+}
+
+
+
+template<typename blDataType,
+         typename blDataPtr,
+         typename blBufferPtr,
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
+
+template<typename blIntegerType,
+         std::size_t blNumberOfDimensions>
+
+inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::create(const std::array<blIntegerType,blNumberOfDimensions>& bufferLengths)
 {
     this->m_properties.setDimensionalSizes(bufferLengths);
 
@@ -220,9 +248,10 @@ inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create()
+inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::create()
 {
     // First we try to allocate the
     // requested space
@@ -263,9 +292,12 @@ inline bool blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::create(
 
 
 
-    // Let's not forget
+    // Let's not forget to let
+    // the user know whether the
+    // create function failed to
+    // create the vector they expected
 
-    return (this->m_data.size() == this->size());
+    return wasAllocationSuccessful;
 }
 //-------------------------------------------------------------------
 

@@ -18,7 +18,7 @@
 //                     buffer
 //
 //                  -- The dimensional lengths are stored in a
-//                     blDimensionalProperties structure
+//                     blDimensionalProperties<blMaxNumOfDimensions> structure
 //
 //                  -- This class is defined within the namespace "blBufferLIB"
 //
@@ -64,7 +64,8 @@ namespace blBufferLIB
 //-------------------------------------------------------------------
 // class blBuffer_0 declaration
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         std::size_t blMaxNumOfDimensions>
 
 class blBuffer_0
 {
@@ -80,7 +81,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blBuffer_0(const blBuffer_0<blDataType>& buffer0) = default;
+    blBuffer_0(const blBuffer_0<blDataType,blMaxNumOfDimensions>& buffer0) = default;
 
 
 
@@ -96,7 +97,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_0<blDataType>&                         operator=(const blBuffer_0<blDataType>& buffer0) = default;
+    blBuffer_0<blDataType,blMaxNumOfDimensions>&                operator=(const blBuffer_0<blDataType,blMaxNumOfDimensions>& buffer0) = default;
 
 
 
@@ -107,11 +108,13 @@ public: // Public functions
     // Functions used to get the
     // buffer's dimensional properties
 
-    const blDimensionalProperties&                  properties()const;
+    const blDimensionalProperties<blMaxNumOfDimensions>&        properties()const;
 
-    const std::size_t&                              size()const;
+    const std::size_t&                                          size()const;
+    const std::size_t&                                          size(const std::size_t& dimension)const;
 
-    const std::size_t&                              size(const std::size_t& dimension)const;
+    const std::size_t&                                          length()const;
+    const std::size_t&                                          length(const std::size_t& dimension)const;
 
 
 
@@ -125,14 +128,14 @@ protected: // Protected variables
     // if the buffer owns the
     // data
 
-    std::vector<blDataType>                         m_data;
+    std::vector<blDataType>                                     m_data;
 
 
 
     // The dimensional properties
     // of this buffer
 
-    blDimensionalProperties                         m_properties;
+    blDimensionalProperties<blMaxNumOfDimensions>               m_properties;
 };
 //-------------------------------------------------------------------
 
@@ -141,9 +144,10 @@ protected: // Protected variables
 //-------------------------------------------------------------------
 // Default constructor
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         std::size_t blMaxNumOfDimensions>
 
-inline blBuffer_0<blDataType>::blBuffer_0()
+inline blBuffer_0<blDataType,blMaxNumOfDimensions>::blBuffer_0()
 {
 }
 //-------------------------------------------------------------------
@@ -153,9 +157,10 @@ inline blBuffer_0<blDataType>::blBuffer_0()
 //-------------------------------------------------------------------
 // Destructor
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         std::size_t blMaxNumOfDimensions>
 
-inline blBuffer_0<blDataType>::~blBuffer_0()
+inline blBuffer_0<blDataType,blMaxNumOfDimensions>::~blBuffer_0()
 {
 }
 //-------------------------------------------------------------------
@@ -165,9 +170,10 @@ inline blBuffer_0<blDataType>::~blBuffer_0()
 //-------------------------------------------------------------------
 // Function used to get the buffer's properties
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         std::size_t blMaxNumOfDimensions>
 
-inline const blDimensionalProperties& blBuffer_0<blDataType>::properties()const
+inline const blDimensionalProperties<blMaxNumOfDimensions>& blBuffer_0<blDataType,blMaxNumOfDimensions>::properties()const
 {
     return m_properties;
 }
@@ -176,13 +182,24 @@ inline const blDimensionalProperties& blBuffer_0<blDataType>::properties()const
 
 
 //-------------------------------------------------------------------
-// Function used to get the total size
+// Functions used to get the total size
 // of the buffer without having to first
 // get the buffer's properties
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         std::size_t blMaxNumOfDimensions>
 
-inline const std::size_t& blBuffer_0<blDataType>::size()const
+inline const std::size_t& blBuffer_0<blDataType,blMaxNumOfDimensions>::size()const
+{
+    return m_properties.size();
+}
+
+
+
+template<typename blDataType,
+         std::size_t blMaxNumOfDimensions>
+
+inline const std::size_t& blBuffer_0<blDataType,blMaxNumOfDimensions>::length()const
 {
     return m_properties.size();
 }
@@ -195,9 +212,20 @@ inline const std::size_t& blBuffer_0<blDataType>::size()const
 // a specified buffer dimension without
 // having to first get the buffer's properties
 //-------------------------------------------------------------------
-template<typename blDataType>
+template<typename blDataType,
+         std::size_t blMaxNumOfDimensions>
 
-inline const std::size_t& blBuffer_0<blDataType>::size(const std::size_t&  dimension)const
+inline const std::size_t& blBuffer_0<blDataType,blMaxNumOfDimensions>::size(const std::size_t&  dimension)const
+{
+    return m_properties.size(dimension);
+}
+
+
+
+template<typename blDataType,
+         std::size_t blMaxNumOfDimensions>
+
+inline const std::size_t& blBuffer_0<blDataType,blMaxNumOfDimensions>::length(const std::size_t&  dimension)const
 {
     return m_properties.size(dimension);
 }

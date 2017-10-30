@@ -94,19 +94,21 @@ namespace blBufferLIB
 // Standard buffer pointer type
 
 template<typename blDataType,
+         std::size_t blMaxNumOfDimensions,
          typename blDataPtr = blDataType*>
 
-using blBufferPtrType = blBuffer_2<blDataType,blDataPtr>*;
+using blBufferPtrType = blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>*;
 
 
 
 // Standard buffer roi pointer type
 
 template<typename blDataType,
+         std::size_t blMaxNumOfDimensions,
          typename blDataPtr = blDataType*,
-         typename blBufferPtr = blBufferPtrType<blDataType> >
+         typename blBufferPtr = blBufferPtrType<blDataType,blMaxNumOfDimensions,blDataPtr> >
 
-using blBufferRoiPtrType = blBuffer_4<blDataType,blDataPtr,blBufferPtr>*;
+using blBufferRoiPtrType = blBuffer_4<double,blDataPtr,blBufferPtr,blMaxNumOfDimensions>;
 
 //-------------------------------------------------------------------
 
@@ -116,11 +118,12 @@ using blBufferRoiPtrType = blBuffer_4<blDataType,blDataPtr,blBufferPtr>*;
 // blBuffer -- Class definition
 //-------------------------------------------------------------------
 template<typename blDataType,
+         std::size_t blMaxNumOfDimensions,
          typename blDataPtr = blDataType*,
-         typename blBufferPtr = blBufferPtrType<blDataType>,
-         typename blBufferRoiPtr = blBufferRoiPtrType<blDataType> >
+         typename blBufferPtr = blBufferPtrType<blDataType,blMaxNumOfDimensions,blDataPtr>,
+         typename blBufferRoiPtr = blBufferRoiPtrType<blDataType,blMaxNumOfDimensions,blDataPtr,blBufferPtr> >
 
-class blBuffer : public blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>
+class blBuffer : public blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>
 {
 public: // Constructors and destructors
 
@@ -134,7 +137,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blBuffer(const blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer);
+    blBuffer(const blBuffer<blDataType,blMaxNumOfDimensions,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer);
 
 
 
@@ -148,11 +151,12 @@ public: // Constructors and destructors
 
 //-------------------------------------------------------------------
 template<typename blDataType,
+         std::size_t blMaxNumOfDimensions,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
 
-inline blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer() : blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>()
+inline blBuffer<blDataType,blMaxNumOfDimensions,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer() : blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>()
 {
 }
 //-------------------------------------------------------------------
@@ -161,12 +165,13 @@ inline blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer() : b
 
 //-------------------------------------------------------------------
 template<typename blDataType,
+         std::size_t blMaxNumOfDimensions,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
 
-inline blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer(const blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer)
-                                                                           : blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>(buffer)
+inline blBuffer<blDataType,blMaxNumOfDimensions,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer(const blBuffer<blDataType,blMaxNumOfDimensions,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer)
+                                                                                                : blBuffer_8<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>(buffer)
 {
 }
 //-------------------------------------------------------------------
@@ -175,11 +180,12 @@ inline blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer(const
 
 //-------------------------------------------------------------------
 template<typename blDataType,
+         std::size_t blMaxNumOfDimensions,
          typename blDataPtr,
          typename blBufferPtr,
          typename blBufferRoiPtr>
 
-inline blBuffer<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::~blBuffer()
+inline blBuffer<blDataType,blMaxNumOfDimensions,blDataPtr,blBufferPtr,blBufferRoiPtr>::~blBuffer()
 {
 }
 //-------------------------------------------------------------------

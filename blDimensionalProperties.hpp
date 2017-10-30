@@ -13,14 +13,20 @@
 //                     that can be used to define an n-dimensional
 //                     contiguous buffer
 //
-//                  -- The dimensional lengths are stored in a vector
-//                     and the vector length determines the number
-//                     of dimensions of the space that is being represented
+//                  -- The dimensional lengths are stored in an array
+//                     where the array length (which is a template parameter)
+//                     determines the number of dimensions of the space
+//                     that is being represented
 //
 //                  -- For example a 2d image has 2 dimensions and thus the
 //                     vector "m_sizes" would have components m_sizes[0] for
 //                     the length of the 1st dimension and component m_sizes[1]
 //                     for the length of the 2nd dimension
+//
+//                  -- The class also defines multi-dimensional offsets that
+//                     can be used to represent "Regions Of Interest" (ROIs)
+//                     for a buffer so that functions can work on user specified
+//                     parts of the buffer and not the entire data
 //
 //                  -- This class defines multiple redundant functions
 //                     with common names for the first 3 dimensions
@@ -77,6 +83,8 @@ namespace blBufferLIB
 //-------------------------------------------------------------------
 // class blDimensionalProperties declaration
 //-------------------------------------------------------------------
+template<std::size_t blNumberOfDimensions>
+
 class blDimensionalProperties
 {
 public: // Constructors and destructors
@@ -91,7 +99,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blDimensionalProperties(const blDimensionalProperties& bufferSizes) = default;
+    blDimensionalProperties(const blDimensionalProperties<blNumberOfDimensions>& bufferSizes) = default;
 
 
 
@@ -107,7 +115,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blDimensionalProperties&     operator=(const blDimensionalProperties& bufferSizes) = default;
+    blDimensionalProperties<blNumberOfDimensions>&          operator=(const blDimensionalProperties<blNumberOfDimensions>& bufferSizes) = default;
 
 
 
@@ -118,6 +126,7 @@ public: // Sizes/Lengths functions
     // Functions used to get the
     // current total size/length
     // of the buffer
+    // size0 * size1 * size2 * ... * sizeN
 
     const std::size_t&                                      size()const;
     const std::size_t&                                      length()const;
@@ -141,16 +150,8 @@ public: // Sizes/Lengths functions
     // Function used to get the
     // sizes/lengths vector
 
-    const std::vector<std::size_t>&                         sizes()const;
-    const std::vector<std::size_t>&                         lengths()const;
-
-
-
-    // Functions used to get the
-    // number of dimensions that
-    // this buffer's data lives in
-
-    const std::size_t&                                      dimensions()const;
+    const std::array<std::size_t,blNumberOfDimensions>&     sizes()const;
+    const std::array<std::size_t,blNumberOfDimensions>&     lengths()const;
 
 
 
@@ -179,10 +180,23 @@ public: // Sizes/Lengths functions
     // wrapping data from an external
     // source
 
+    void                                                    setDimensionalSizes();
+
     template<typename...Lengths>
     void                                                    setDimensionalSizes(const Lengths&...bufferLengths);
-    void                                                    setDimensionalSizes(const std::initializer_list<std::size_t>& bufferLengths);
-    void                                                    setDimensionalSizes(const std::vector<std::size_t>& bufferLengths);
+
+    template<typename blIntegerType>
+    void                                                    setDimensionalSizes(const std::initializer_list<blIntegerType>& bufferLengths);
+
+    template<typename blIntegerType>
+    void                                                    setDimensionalSizes(const std::vector<blIntegerType>& bufferLengths);
+
+    template<typename blIntegerType,
+             std::size_t blDifferentNumberOfDimensions>
+    void                                                    setDimensionalSizes(const std::array<blIntegerType,blDifferentNumberOfDimensions>& bufferLengths);
+
+    void                                                    setDimensionalSize(const std::size_t& whichDimensionalSize,
+                                                                               const std::size_t& dimensionalSize);
 
 
 
@@ -190,10 +204,20 @@ public: // Sizes/Lengths functions
     // manually set the offsets for
     // a Region Of Interest (ROI)
 
+    void                                                    setOffsets();
+
     template<typename...Offsets>
     void                                                    setOffsets(const Offsets&...bufferOffsets);
-    void                                                    setOffsets(const std::initializer_list<std::size_t>& bufferOffsets);
-    void                                                    setOffsets(const std::vector<std::size_t>& bufferOffsets);
+
+    template<typename blIntegerType>
+    void                                                    setOffsets(const std::initializer_list<blIntegerType>& bufferOffsets);
+
+    template<typename blIntegerType>
+    void                                                    setOffsets(const std::vector<blIntegerType>& bufferOffsets);
+
+    template<typename blIntegerType,
+             std::size_t blDifferentNumberOfDimensions>
+    void                                                    setOffsets(const std::array<blIntegerType,blDifferentNumberOfDimensions>& bufferOffsets);
 
     void                                                    setOffset(const std::size_t& whichOffset,
                                                                       const std::size_t& offset);
@@ -203,7 +227,7 @@ public: // Sizes/Lengths functions
     // Functions used to get
     // the ROI offsets
 
-    const std::vector<std::size_t>&                         offsets()const;
+    const std::array<std::size_t,blNumberOfDimensions>&     offsets()const;
     const std::size_t&                                      offset(const std::size_t& whichOffset)const;
 
 
@@ -221,7 +245,7 @@ private: // Private function used to
          // calculate the total size
          // of the buffer
 
-    void                                                    calculateTotalSizeOfBufferAndDefaultMissingOffsets();
+    void                                                    calculateTotalSizeOfBuffer();
 
 
 
@@ -233,28 +257,21 @@ protected: // Protected variables
     // Vector holding the lengths of
     // the buffer in each dimension
 
-    std::vector<std::size_t>                                m_sizes;
+    std::array<std::size_t,blNumberOfDimensions>            m_sizes;
 
 
 
     // Total length of the buffer
+    // size0 * size1 * size2 * ... * sizeN
 
     std::size_t                                             m_size;
-
-
-
-    // Number of dimensions of
-    // the space represented by
-    // these properties
-
-    std::size_t                                             m_dimensions;
 
 
 
     // Total length of a single
     // unit for each dimension
 
-    std::vector<std::size_t>                                m_sizesOfSingleUnitsInEachDimenion;
+    std::array<std::size_t,blNumberOfDimensions>            m_sizesOfSingleUnitsInEachDimenion;
 
 
 
@@ -263,7 +280,7 @@ protected: // Protected variables
     // where these offsets would be the starting
     // coordinates of the ROI
 
-    std::vector<std::size_t>                                m_offsets;
+    std::array<std::size_t,blNumberOfDimensions>            m_offsets;
 };
 //-------------------------------------------------------------------
 
@@ -272,21 +289,22 @@ protected: // Protected variables
 //-------------------------------------------------------------------
 // Default constructor
 //-------------------------------------------------------------------
-inline blDimensionalProperties::blDimensionalProperties()
+template<std::size_t blNumberOfDimensions>
+
+inline blDimensionalProperties<blNumberOfDimensions>::blDimensionalProperties()
 {
-    // We default the buffer
-    // to an empty buffer that
-    // doesn't wrap any external
-    // data
-
-    std::vector<std::size_t> emptyVector;
-
-    m_sizes = emptyVector;
-    m_sizesOfSingleUnitsInEachDimenion = emptyVector;
-    m_offsets = emptyVector;
+    // We default all sizes/offsets to zero
 
     m_size = 0;
-    m_dimensions = 0;
+
+    for(auto& i : m_sizes)
+        i = 0;
+
+    for(auto& i: m_sizesOfSingleUnitsInEachDimenion)
+        i = 0;
+
+    for(auto& i : m_offsets)
+        i = 0;
 }
 //-------------------------------------------------------------------
 
@@ -295,7 +313,9 @@ inline blDimensionalProperties::blDimensionalProperties()
 //-------------------------------------------------------------------
 // Destructor
 //-------------------------------------------------------------------
-inline blDimensionalProperties::~blDimensionalProperties()
+template<std::size_t blNumberOfDimensions>
+
+inline blDimensionalProperties<blNumberOfDimensions>::~blDimensionalProperties()
 {
 }
 //-------------------------------------------------------------------
@@ -308,55 +328,193 @@ inline blDimensionalProperties::~blDimensionalProperties()
 // when wrapping data from an external
 // source
 //-------------------------------------------------------------------
+template<std::size_t blNumberOfDimensions>
+
+inline void blDimensionalProperties<blNumberOfDimensions>::setDimensionalSizes()
+{
+    // Since the user did not specify
+    // any dimensional sizes, we default
+    // them all to zero
+
+    for(auto& i : m_sizes)
+        i = static_cast<std::size_t>(0);
+
+
+
+    // Finally we calculate the total
+    // length of the buffer
+
+    calculateTotalSizeOfBuffer();
+}
+
+
+
+template<std::size_t blNumberOfDimensions>
+
 template<typename...Lengths>
 
-inline void blDimensionalProperties::setDimensionalSizes(const Lengths&...bufferLengths)
+inline void blDimensionalProperties<blNumberOfDimensions>::setDimensionalSizes(const Lengths&...bufferLengths)
 {
-    // First we initialize
-    // the sizes vector
-
-    m_sizes = {static_cast<std::size_t>(bufferLengths)...};
-
-
-
-    // Then we calculate the
-    // total size of the buffer
-
-    calculateTotalSizeOfBufferAndDefaultMissingOffsets();
+    setDimensionalSizes({bufferLengths...});
 }
 
 
 
-inline void blDimensionalProperties::setDimensionalSizes(const std::initializer_list<std::size_t>& bufferLengths)
+template<std::size_t blNumberOfDimensions>
+
+template<typename blIntegerType>
+
+inline void blDimensionalProperties<blNumberOfDimensions>::setDimensionalSizes(const std::initializer_list<blIntegerType>& bufferLengths)
 {
-    // First we initialize
-    // the sizes vector
+    // Because more sizes could have been
+    // specified than the allowed number of
+    // sizes, we loop through the first
+    // sizes
 
-    m_sizes = bufferLengths;
+    auto sizesSourceIter = bufferLengths.begin();
+    auto sizesDestIter = m_sizes.begin();
 
 
 
-    // Then we calculate the
-    // total size of the buffer
+    for(int i = 0;
+        sizesSourceIter != bufferLengths.end() && sizesDestIter != m_sizes.end();
+        ++sizesSourceIter,++sizesDestIter,++i)
+    {
+        *sizesDestIter = static_cast<std::size_t>(*sizesSourceIter);
+    }
 
-    calculateTotalSizeOfBufferAndDefaultMissingOffsets();
+
+
+    // We default the remaining sizes
+    // to one if they were not specified
+    // here
+
+    for(;
+        sizesDestIter != m_sizes.end();
+        ++sizesDestIter)
+    {
+        *sizesDestIter = static_cast<std::size_t>(1);
+    }
+
+
+
+    // Finally we calculate the total
+    // length of the buffer
+
+    calculateTotalSizeOfBuffer();
 }
 
 
 
-inline void blDimensionalProperties::setDimensionalSizes(const std::vector<std::size_t>& bufferLengths)
-{
-    // First we copy the
-    // sizes vector
+template<std::size_t blNumberOfDimensions>
 
-    m_sizes = bufferLengths;
+template<typename blIntegerType>
+
+inline void blDimensionalProperties<blNumberOfDimensions>::setDimensionalSizes(const std::vector<blIntegerType>& bufferLengths)
+{
+    // Because more sizes could have been
+    // specified than the allowed number of
+    // sizes, we loop through the first
+    // sizes
+
+    auto sizesSourceIter = bufferLengths.begin();
+    auto sizesDestIter = m_sizes.begin();
+
+
+
+    for(int i = 0;
+        sizesSourceIter != bufferLengths.end() && sizesDestIter != m_sizes.end();
+        ++sizesSourceIter,++sizesDestIter,++i)
+    {
+        *sizesDestIter = static_cast<std::size_t>(*sizesSourceIter);
+    }
+
+
+
+    // We default the remaining sizes
+    // to one if they were not specified
+    // here
+
+    for(;
+        sizesDestIter != m_sizes.end();
+        ++sizesDestIter)
+    {
+        *sizesDestIter = static_cast<std::size_t>(1);
+    }
+
+
+
+    // Finally we calculate the total
+    // length of the buffer
+
+    calculateTotalSizeOfBuffer();
+}
+
+
+
+template<std::size_t blNumberOfDimensions>
+
+template<typename blIntegerType,
+         std::size_t blDifferentNumberOfDimensions>
+
+inline void blDimensionalProperties<blNumberOfDimensions>::setDimensionalSizes(const std::array<blIntegerType,blDifferentNumberOfDimensions>& bufferLengths)
+{
+    // Because more sizes could have been
+    // specified than the allowed number of
+    // sizes, we loop through the first
+    // sizes
+
+    auto sizesSourceIter = bufferLengths.begin();
+    auto sizesDestIter = m_sizes.begin();
+
+
+
+    for(int i = 0;
+        sizesSourceIter != bufferLengths.end() && sizesDestIter != m_sizes.end();
+        ++sizesSourceIter,++sizesDestIter,++i)
+    {
+        *sizesDestIter = static_cast<std::size_t>(*sizesSourceIter);
+    }
+
+
+
+    // We default the remaining sizes
+    // to one if they were not specified
+    // here
+
+    for(;
+        sizesDestIter != m_sizes.end();
+        ++sizesDestIter)
+    {
+        *sizesDestIter = static_cast<std::size_t>(1);
+    }
+
+
+
+    // Finally we calculate the total
+    // length of the buffer
+
+    calculateTotalSizeOfBuffer();
+}
+
+
+
+template<std::size_t blNumberOfDimensions>
+
+inline void blDimensionalProperties<blNumberOfDimensions>::setDimensionalSize(const std::size_t& whichDimensionalSize,
+                                                                              const std::size_t& dimensionalSize)
+{
+    // First we set the
+    // dimenaional size
+
+    m_sizes[whichDimensionalSize] = dimensionalSize;
 
 
 
     // Then we calculate the
     // total size of the buffer
 
-    calculateTotalSizeOfBufferAndDefaultMissingOffsets();
+    calculateTotalSizeOfBuffer();
 }
 //-------------------------------------------------------------------
 
@@ -367,33 +525,183 @@ inline void blDimensionalProperties::setDimensionalSizes(const std::vector<std::
 // manually set the offsets for
 // a Region Of Interest (ROI)
 //-------------------------------------------------------------------
+template<std::size_t blNumberOfDimensions>
+
+inline void blDimensionalProperties<blNumberOfDimensions>::setOffsets()
+{
+    // Since the user did not specify
+    // any offsets, we default
+    // them all to zero
+
+    for(auto& i : m_offsets)
+        i = static_cast<std::size_t>(0);
+
+
+
+    // Finally we calculate the total
+    // length of the buffer
+
+    calculateTotalSizeOfBuffer();
+}
+
+
+
+template<std::size_t blNumberOfDimensions>
+
 template<typename...Offsets>
 
-inline void blDimensionalProperties::setOffsets(const Offsets&...bufferOffsets)
+inline void blDimensionalProperties<blNumberOfDimensions>::setOffsets(const Offsets&...bufferOffsets)
 {
-    // First we set the offsets
-
-    m_offsets = {static_cast<std::size_t>(bufferOffsets)...};
-
-    calculateTotalSizeOfBufferAndDefaultMissingOffsets();
+    setOffsets({bufferOffsets...});
 }
 
 
 
-inline void blDimensionalProperties::setOffsets(const std::initializer_list<std::size_t>& bufferOffsets)
-{
-    m_offsets = bufferOffsets;
+template<std::size_t blNumberOfDimensions>
 
-    calculateTotalSizeOfBufferAndDefaultMissingOffsets();
+template<typename blIntegerType>
+
+inline void blDimensionalProperties<blNumberOfDimensions>::setOffsets(const std::initializer_list<blIntegerType>& bufferOffsets)
+{
+    // Because more offsets could have been
+    // specified than the allowed number of
+    // offsets, we loop through the first
+    // offsets
+
+    auto offsetsSourceIter = bufferOffsets.begin();
+    auto offsetsDestIter = m_offsets.begin();
+
+
+
+    for(int i = 0;
+        offsetsSourceIter != bufferOffsets.end() && offsetsDestIter != m_offsets.end();
+        ++offsetsSourceIter,++offsetsDestIter,++i)
+    {
+        *offsetsDestIter = static_cast<std::size_t>(*offsetsSourceIter);
+    }
+
+
+
+    // We default the remaining offsets
+    // to zero if they were not specified
+    // here
+
+    for(;
+        offsetsDestIter != m_offsets.end();
+        ++offsetsDestIter)
+    {
+        *offsetsDestIter = static_cast<std::size_t>(0);
+    }
+
+
+
+    // Finally we calculate the total
+    // length of the buffer
+
+    calculateTotalSizeOfBuffer();
 }
 
 
 
-inline void blDimensionalProperties::setOffsets(const std::vector<std::size_t>& bufferOffsets)
-{
-    m_offsets = bufferOffsets;
+template<std::size_t blNumberOfDimensions>
 
-    calculateTotalSizeOfBufferAndDefaultMissingOffsets();
+template<typename blIntegerType>
+
+inline void blDimensionalProperties<blNumberOfDimensions>::setOffsets(const std::vector<blIntegerType>& bufferOffsets)
+{
+    // Because more offsets could have been
+    // specified than the allowed number of
+    // offsets, we loop through the first
+    // offsets
+
+    auto offsetsSourceIter = bufferOffsets.begin();
+    auto offsetsDestIter = m_offsets.begin();
+
+
+
+    for(int i = 0;
+        offsetsSourceIter != bufferOffsets.end() && offsetsDestIter != m_offsets.end();
+        ++offsetsSourceIter,++offsetsDestIter,++i)
+    {
+        *offsetsDestIter = static_cast<std::size_t>(*offsetsSourceIter);
+    }
+
+
+
+    // We default the remaining offsets
+    // to zero if they were not specified
+    // here
+
+    for(;
+        offsetsDestIter != m_offsets.end();
+        ++offsetsDestIter)
+    {
+        *offsetsDestIter = static_cast<std::size_t>(0);
+    }
+
+
+
+    // Finally we calculate the total
+    // length of the buffer
+
+    calculateTotalSizeOfBuffer();
+}
+
+
+
+template<std::size_t blNumberOfDimensions>
+
+template<typename blIntegerType,
+         std::size_t blDifferentNumberOfDimensions>
+
+inline void blDimensionalProperties<blNumberOfDimensions>::setOffsets(const std::array<blIntegerType,blDifferentNumberOfDimensions>& bufferOffsets)
+{
+    // Because more offsets could have been
+    // specified than the allowed number of
+    // offsets, we loop through the first
+    // offsets
+
+    auto offsetsSourceIter = bufferOffsets.begin();
+    auto offsetsDestIter = m_offsets.begin();
+
+
+
+    for(int i = 0;
+        offsetsSourceIter != bufferOffsets.end() && offsetsDestIter != m_offsets.end();
+        ++offsetsSourceIter,++offsetsDestIter,++i)
+    {
+        *offsetsDestIter = static_cast<std::size_t>(*offsetsSourceIter);
+    }
+
+
+
+    // We default the remaining offsets
+    // to zero if they were not specified
+    // here
+
+    for(;
+        offsetsDestIter != m_offsets.end();
+        ++offsetsDestIter)
+    {
+        *offsetsDestIter = static_cast<std::size_t>(0);
+    }
+
+
+
+    // Finally we calculate the total
+    // length of the buffer
+
+    calculateTotalSizeOfBuffer();
+}
+
+
+
+template<std::size_t blNumberOfDimensions>
+
+inline void blDimensionalProperties<blNumberOfDimensions>::setOffset(const std::size_t& whichOffset,
+                                                                     const std::size_t& offset)
+{
+    m_offsets[whichOffset] = offset;
 }
 //-------------------------------------------------------------------
 
@@ -402,35 +710,45 @@ inline void blDimensionalProperties::setOffsets(const std::vector<std::size_t>& 
 //-------------------------------------------------------------------
 // Function use to get the ROI offsets
 //-------------------------------------------------------------------
-inline const std::vector<std::size_t>& blDimensionalProperties::offsets()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::array<std::size_t,blNumberOfDimensions>& blDimensionalProperties<blNumberOfDimensions>::offsets()const
 {
     return m_offsets;
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::offset(const std::size_t& whichOffset)const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::offset(const std::size_t& whichOffset)const
 {
     return m_offsets[whichOffset];
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::rowOffset()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::rowOffset()const
 {
     return m_offsets[0];
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::colOffset()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::colOffset()const
 {
     return m_offsets[1];
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::pageOffset()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::pageOffset()const
 {
     return m_offsets[2];
 }
@@ -441,28 +759,20 @@ inline const std::size_t& blDimensionalProperties::pageOffset()const
 //-------------------------------------------------------------------
 // Functions used to return the sizes vector
 //-------------------------------------------------------------------
-inline const std::vector<std::size_t>& blDimensionalProperties::sizes()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::array<std::size_t,blNumberOfDimensions>& blDimensionalProperties<blNumberOfDimensions>::sizes()const
 {
     return m_sizes;
 }
 
 
 
-inline const std::vector<std::size_t>& blDimensionalProperties::lengths()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::array<std::size_t,blNumberOfDimensions>& blDimensionalProperties<blNumberOfDimensions>::lengths()const
 {
     return m_sizes;
-}
-//-------------------------------------------------------------------
-
-
-
-//-------------------------------------------------------------------
-// Function used to return the number of
-// dimensions that this data lives in
-//-------------------------------------------------------------------
-inline const std::size_t& blDimensionalProperties::dimensions()const
-{
-    return m_dimensions;
 }
 //-------------------------------------------------------------------
 
@@ -472,7 +782,9 @@ inline const std::size_t& blDimensionalProperties::dimensions()const
 // Function used to get the size of
 // an individual dimension
 //-------------------------------------------------------------------
-inline std::size_t blDimensionalProperties::sizeOfSingleUnitInSpecificDimension(const std::size_t& whichDimension)const
+template<std::size_t blNumberOfDimensions>
+
+inline std::size_t blDimensionalProperties<blNumberOfDimensions>::sizeOfSingleUnitInSpecificDimension(const std::size_t& whichDimension)const
 {
     std::size_t unitSize = 1;
 
@@ -489,7 +801,9 @@ inline std::size_t blDimensionalProperties::sizeOfSingleUnitInSpecificDimension(
 // Functions used to calculate the
 // total length of the buffer
 //-------------------------------------------------------------------
-inline void blDimensionalProperties::calculateTotalSizeOfBufferAndDefaultMissingOffsets()
+template<std::size_t blNumberOfDimensions>
+
+inline void blDimensionalProperties<blNumberOfDimensions>::calculateTotalSizeOfBuffer()
 {
     // First we calculate the
     // overall buffer size
@@ -508,21 +822,6 @@ inline void blDimensionalProperties::calculateTotalSizeOfBufferAndDefaultMissing
 
 
 
-    // Store the number of dimensions
-
-    m_dimensions = m_sizes.size();
-
-
-
-    // If we have more dimensions than
-    // the number of offsets specified,
-    // we set those offsets to zero
-
-    if(m_dimensions > m_offsets.size())
-        m_offsets.resize(m_dimensions,std::size_t(0));
-
-
-
     // Finally, we calculate the size
     // of a single unit in each dimension
     // For example if we are talking about
@@ -530,8 +829,6 @@ inline void blDimensionalProperties::calculateTotalSizeOfBufferAndDefaultMissing
     // the size of a single page unit  is rows x cols,
     // the size of a single column unit is rows
     // the size of single a row unit is 1
-
-    m_sizesOfSingleUnitsInEachDimenion.resize(m_sizes.size());
 
     for(std::size_t i = 0; i < m_sizes.size(); ++i)
     {
@@ -550,70 +847,90 @@ inline void blDimensionalProperties::calculateTotalSizeOfBufferAndDefaultMissing
 //-------------------------------------------------------------------
 // Length/Size functions
 //-------------------------------------------------------------------
-inline const std::size_t& blDimensionalProperties::size()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::size()const
 {
     return m_size;
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::length()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::length()const
 {
     return m_size;
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::size(const std::size_t& dimension)const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::size(const std::size_t& dimension)const
 {
     return m_sizes[dimension];
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::length(const std::size_t& dimension)const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::length(const std::size_t& dimension)const
 {
     return m_sizes[dimension];
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::height()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::height()const
 {
     return m_sizes[0];
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::width()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::width()const
 {
     return m_sizes[1];
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::depth()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::depth()const
 {
     return m_sizes[2];
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::rows()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::rows()const
 {
     return m_sizes[0];
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::cols()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::cols()const
 {
     return m_sizes[1];
 }
 
 
 
-inline const std::size_t& blDimensionalProperties::pages()const
+template<std::size_t blNumberOfDimensions>
+
+inline const std::size_t& blDimensionalProperties<blNumberOfDimensions>::pages()const
 {
     return m_sizes[2];
 }

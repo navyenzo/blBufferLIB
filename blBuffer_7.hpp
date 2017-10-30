@@ -80,16 +80,17 @@ namespace blBufferLIB
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-class blBuffer_7 : public blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>
+class blBuffer_7 : public blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>
 {
 public: // Public type aliases
 
 
 
-    using circular_iterator = typename blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circular_iterator;
-    using circular_const_iterator = typename blBuffer_6<blDataType,const blDataPtr,const blBufferPtr,const blBufferRoiPtr>::circular_const_iterator;
+    using circular_iterator = typename blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::circular_iterator;
+    using circular_const_iterator = typename blBuffer_6<blDataType,const blDataPtr,const blBufferPtr,const blBufferRoiPtr,blMaxNumOfDimensions>::circular_const_iterator;
 
 
 
@@ -105,7 +106,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blBuffer_7(const blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer7) = default;
+    blBuffer_7(const blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>& buffer7) = default;
 
 
 
@@ -121,7 +122,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>&    operator=(const blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>& buffer7) = default;
+    blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>&    operator=(const blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>& buffer7) = default;
 
 
 
@@ -133,7 +134,7 @@ public: // Public functions
     // whether this buffer is currently
     // being written to by another thread
 
-    bool                                    isBufferBeingCurrentlyWrittenTo()const;
+    bool                                                                    isBufferBeingCurrentlyWrittenTo()const;
 
 
 
@@ -146,17 +147,17 @@ public: // Public functions
     // the functions "data()" and "size()"
 
     template <typename blValueType>
-    std::size_t                             write_value(const blValueType& value);
+    std::size_t                                                             write_value(const blValueType& value);
 
     template <typename blValueType>
-    std::size_t                             write_value(const blValueType* value);
+    std::size_t                                                             write_value(const blValueType* value);
 
     template <typename blBufferType>
-    std::size_t                             write_buffer(const blBufferType& buffer);
+    std::size_t                                                             write_buffer(const blBufferType& buffer);
 
     template <typename blBufferType>
-    std::size_t                             write_buffer(const blBufferType* buffer,
-                                                         const std::size_t& bufferLength);
+    std::size_t                                                             write_buffer(const blBufferType* buffer,
+                                                                                         const std::size_t& bufferLength);
 
 
 
@@ -167,17 +168,17 @@ public: // Public functions
     // is currently writing to the buffer
 
     template <typename blValueType>
-    std::size_t                             write_value_no_wait(const blValueType& value);
+    std::size_t                                                             write_value_no_wait(const blValueType& value);
 
     template <typename blValueType>
-    std::size_t                             write_value_no_wait(const blValueType* value);
+    std::size_t                                                             write_value_no_wait(const blValueType* value);
 
     template <typename blBufferType>
-    std::size_t                             write_buffer_no_wait(const blBufferType& buffer);
+    std::size_t                                                             write_buffer_no_wait(const blBufferType& buffer);
 
     template <typename blBufferType>
-    std::size_t                             write_buffer_no_wait(const blBufferType* buffer,
-                                                                 const std::size_t& bufferLength);
+    std::size_t                                                             write_buffer_no_wait(const blBufferType* buffer,
+                                                                                                 const std::size_t& bufferLength);
 
 
 
@@ -188,19 +189,19 @@ public: // Public functions
     // this buffer, while the other
     // function just quits in that case
 
-    std::size_t                             write(const char* buffer,
-                                                  const std::size_t& bufferLength);
+    std::size_t                                                             write(const char* buffer,
+                                                                                  const std::size_t& bufferLength);
 
-    std::size_t                             write_no_wait(const char* buffer,
-                                                          const std::size_t& bufferLength);
-
-    template<typename blInputIteratorType>
-    std::size_t                             write(const blInputIteratorType& begin,
-                                                  const blInputIteratorType& end);
+    std::size_t                                                             write_no_wait(const char* buffer,
+                                                                                          const std::size_t& bufferLength);
 
     template<typename blInputIteratorType>
-    std::size_t                             write_no_wait(const blInputIteratorType& begin,
-                                                          const blInputIteratorType& end);
+    std::size_t                                                             write(const blInputIteratorType& begin,
+                                                                                  const blInputIteratorType& end);
+
+    template<typename blInputIteratorType>
+    std::size_t                                                             write_no_wait(const blInputIteratorType& begin,
+                                                                                          const blInputIteratorType& end);
 
 
 
@@ -208,15 +209,15 @@ public: // Public functions
     // move the write iterator to
     // the desired place in the buffer
 
-    void                                    advance_writeIterator(const std::ptrdiff_t& movement);
-    void                                    setPosition_writeIterator(const std::ptrdiff_t& positionInTheBuffer);
+    void                                                                    advance_writeIterator(const std::ptrdiff_t& movement);
+    void                                                                    setPosition_writeIterator(const std::ptrdiff_t& positionInTheBuffer);
 
 
 
     // Function used to get the
     // current write iterator
 
-    const circular_iterator&                writeIterator()const;
+    const circular_iterator&                                                writeIterator()const;
 
 
 
@@ -228,7 +229,7 @@ protected: // Protected variables
     // track of the current writing
     // spot
 
-    circular_iterator                       m_writeIterator;
+    circular_iterator                                                       m_writeIterator;
 
 
 
@@ -236,7 +237,7 @@ protected: // Protected variables
     // the buffer is currently being written
     // to by a thread
 
-    std::atomic_bool                        m_isBufferBeingCurrentlyWrittenTo;
+    std::atomic_bool                                                        m_isBufferBeingCurrentlyWrittenTo;
 };
 //-------------------------------------------------------------------
 
@@ -248,9 +249,10 @@ protected: // Protected variables
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer_7() : blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>()
+inline blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::blBuffer_7() : blBuffer_6<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>()
 {
     // We start by saying that this
     // buffer is not currently being
@@ -281,9 +283,10 @@ inline blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::blBuffer_7()
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::~blBuffer_7()
+inline blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::~blBuffer_7()
 {
 }
 //-------------------------------------------------------------------
@@ -297,9 +300,10 @@ inline blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::~blBuffer_7(
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline void blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::advance_writeIterator(const std::ptrdiff_t& movement)
+inline void blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::advance_writeIterator(const std::ptrdiff_t& movement)
 {
     m_writeIterator.advance(movement);
 }
@@ -309,9 +313,10 @@ inline void blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::advance
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline void blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::setPosition_writeIterator(const std::ptrdiff_t& positionInTheBuffer)
+inline void blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::setPosition_writeIterator(const std::ptrdiff_t& positionInTheBuffer)
 {
     m_writeIterator.setDataIndex(positionInTheBuffer);
 }
@@ -325,9 +330,10 @@ inline void blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::setPosi
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline const typename blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::circular_iterator& blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::writeIterator()const
+inline const typename blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::circular_iterator& blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::writeIterator()const
 {
     return m_writeIterator;
 }
@@ -342,9 +348,10 @@ inline const typename blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline bool blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::isBufferBeingCurrentlyWrittenTo()const
+inline bool blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::isBufferBeingCurrentlyWrittenTo()const
 {
     return bool(m_isBufferBeingCurrentlyWrittenTo);
 }
@@ -364,11 +371,12 @@ inline bool blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::isBuffe
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blValueType>
 
-inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_value(const blValueType& value)
+inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::write_value(const blValueType& value)
 {
     return ( this->write(reinterpret_cast<const char*>(&value),sizeof(value)) ) / sizeof(value);
 }
@@ -378,11 +386,12 @@ inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blValueType>
 
-inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_value(const blValueType* value)
+inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::write_value(const blValueType* value)
 {
     if(value)
         return ( this->write(reinterpret_cast<const char*>(value),sizeof(*value)) ) / sizeof(value);
@@ -395,11 +404,12 @@ inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blBufferType>
 
-inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_buffer(const blBufferType& buffer)
+inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::write_buffer(const blBufferType& buffer)
 {
     return ( this->write(reinterpret_cast<const char*>(buffer.data()),sizeof(buffer.data()[0])*(buffer.size())) ) / sizeof(buffer.data()[0]);
 }
@@ -409,12 +419,13 @@ inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blBufferType>
 
-inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_buffer(const blBufferType* buffer,
-                                                                                             const std::size_t& bufferLength)
+inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::write_buffer(const blBufferType* buffer,
+                                                                                                                  const std::size_t& bufferLength)
 {
     return ( this->write(reinterpret_cast<const char*>(buffer),sizeof(buffer[0])*(bufferLength)) ) / sizeof(buffer[0]);
 }
@@ -432,11 +443,12 @@ inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blValueType>
 
-inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_value_no_wait(const blValueType& value)
+inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::write_value_no_wait(const blValueType& value)
 {
     return ( this->write_no_wait(reinterpret_cast<const char*>(&value),sizeof(value)) ) / sizeof(value);
 }
@@ -446,11 +458,12 @@ inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blValueType>
 
-inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_value_no_wait(const blValueType* value)
+inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::write_value_no_wait(const blValueType* value)
 {
     if(value)
         return ( this->write_no_wait(reinterpret_cast<const char*>(value),sizeof(*value)) ) / sizeof(value);
@@ -463,11 +476,12 @@ inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blBufferType>
 
-inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_buffer_no_wait(const blBufferType& buffer)
+inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::write_buffer_no_wait(const blBufferType& buffer)
 {
     return ( this->write_no_wait(reinterpret_cast<const char*>(buffer.data()),sizeof(buffer.data()[0])*(buffer.size())) ) / sizeof(buffer.data()[0]);
 }
@@ -477,12 +491,13 @@ inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blBufferType>
 
-inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_buffer_no_wait(const blBufferType* buffer,
-                                                                                                     const std::size_t& bufferLength)
+inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::write_buffer_no_wait(const blBufferType* buffer,
+                                                                                                                          const std::size_t& bufferLength)
 {
     return ( this->write_no_wait(reinterpret_cast<const char*>(buffer),sizeof(buffer[0])*(bufferLength)) ) / sizeof(buffer[0]);
 }
@@ -498,10 +513,11 @@ inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write(const char* stuffToWrite,
-                                                                                      const std::size_t& numberOfBytesToWrite)
+inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::write(const char* stuffToWrite,
+                                                                                                           const std::size_t& numberOfBytesToWrite)
 {
     // First we check to make
     // sure we don't have a
@@ -608,10 +624,11 @@ inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_no_wait(const char* stuffToWrite,
-                                                                                              const std::size_t& numberOfBytesToWrite)
+inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::write_no_wait(const char* stuffToWrite,
+                                                                                                                   const std::size_t& numberOfBytesToWrite)
 {
     // First we check to make
     // sure we don't have a
@@ -712,12 +729,13 @@ inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blInputIteratorType>
 
-inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write(const blInputIteratorType& begin,
-                                                                                      const blInputIteratorType& end)
+inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::write(const blInputIteratorType& begin,
+                                                                                                           const blInputIteratorType& end)
 {
     // If another thread is currently
     // writing to this buffer, this function
@@ -771,12 +789,13 @@ inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::
 template<typename blDataType,
          typename blDataPtr,
          typename blBufferPtr,
-         typename blBufferRoiPtr>
+         typename blBufferRoiPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blInputIteratorType>
 
-inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr>::write_no_wait(const blInputIteratorType& begin,
-                                                                                              const blInputIteratorType& end)
+inline std::size_t blBuffer_7<blDataType,blDataPtr,blBufferPtr,blBufferRoiPtr,blMaxNumOfDimensions>::write_no_wait(const blInputIteratorType& begin,
+                                                                                                                   const blInputIteratorType& end)
 {
     // If another thread is currently
     // writing to this buffer, this function

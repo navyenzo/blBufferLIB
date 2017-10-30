@@ -71,9 +71,10 @@ namespace blBufferLIB
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-class blBuffer_3 : public blBuffer_2<blDataType,blDataPtr>
+class blBuffer_3 : public blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>
 {
 public: // Public type aliases
 
@@ -81,11 +82,11 @@ public: // Public type aliases
 
     // Buffer circular iterators
 
-    using circular_iterator = blCircularIterator< blBuffer_2<blDataType,blDataPtr>,blBufferPtr >;
-    using circular_const_iterator = blCircularIterator< blBuffer_2<blDataType,const blDataPtr>,const blBufferPtr >;
+    using circular_iterator = blCircularIterator< blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>,blBufferPtr >;
+    using circular_const_iterator = blCircularIterator< blBuffer_2<blDataType,const blDataPtr,blMaxNumOfDimensions>,const blBufferPtr >;
 
-    using circular_reverse_iterator = blCircularReverseIterator< blBuffer_2<blDataType,blDataPtr>,blBufferPtr >;
-    using circular_const_reverse_iterator = blCircularReverseIterator< blBuffer_2<blDataType,const blDataPtr>,const blBufferPtr >;
+    using circular_reverse_iterator = blCircularReverseIterator< blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>,blBufferPtr >;
+    using circular_const_reverse_iterator = blCircularReverseIterator< blBuffer_2<blDataType,const blDataPtr,blMaxNumOfDimensions>,const blBufferPtr >;
 
 
 
@@ -101,7 +102,7 @@ public: // Constructors and destructors
 
     // Copy constructor
 
-    blBuffer_3(const blBuffer_3<blDataType,blDataPtr,blBufferPtr>& buffer3) = default;
+    blBuffer_3(const blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>& buffer3) = default;
 
 
 
@@ -117,7 +118,7 @@ public: // Overloaded operators
 
     // Assignment operator
 
-    blBuffer_3<blDataType,blDataPtr,blBufferPtr>&           operator=(const blBuffer_3<blDataType,blDataPtr,blBufferPtr>& buffer3) = default;
+    blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>&      operator=(const blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>& buffer3) = default;
 
 
 
@@ -130,8 +131,8 @@ public: // Public static functions
     // and a buffer size
 
     template<typename blIntegerType>
-    static std::size_t                                      circ_index(const blIntegerType& index,
-                                                                       const std::size_t& totalLength)
+    static std::size_t                                                      circ_index(const blIntegerType& index,
+                                                                                       const std::size_t& totalLength)
     {
         return static_cast<std::size_t>( (index % static_cast<blIntegerType>(totalLength) + static_cast<blIntegerType>(totalLength)) ) % totalLength;
     }
@@ -151,15 +152,15 @@ public: // Public functions
     // the iterator never reaches the
     // "end" iterator)
 
-    circular_iterator                                       circ_begin(const std::ptrdiff_t& maxNumberOfCirculations = 1);
-    circular_iterator                                       circ_end();
-    circular_const_iterator                                 circ_cbegin(const std::ptrdiff_t& maxNumberOfCirculations = 1)const;
-    circular_const_iterator                                 circ_cend()const;
+    circular_iterator                                                       circ_begin(const std::ptrdiff_t& maxNumberOfCirculations = 1);
+    circular_iterator                                                       circ_end();
+    circular_const_iterator                                                 circ_cbegin(const std::ptrdiff_t& maxNumberOfCirculations = 1)const;
+    circular_const_iterator                                                 circ_cend()const;
 
-    circular_reverse_iterator                               circ_rbegin(const std::ptrdiff_t& maxNumberOfCirculations = 1);
-    circular_reverse_iterator                               circ_rend();
-    circular_const_reverse_iterator                         circ_crbegin(const std::ptrdiff_t& maxNumberOfCirculations = 1)const;
-    circular_const_reverse_iterator                         circ_crend()const;
+    circular_reverse_iterator                                               circ_rbegin(const std::ptrdiff_t& maxNumberOfCirculations = 1);
+    circular_reverse_iterator                                               circ_rend();
+    circular_const_reverse_iterator                                         circ_crbegin(const std::ptrdiff_t& maxNumberOfCirculations = 1)const;
+    circular_const_reverse_iterator                                         circ_crend()const;
 
 
 
@@ -169,17 +170,17 @@ public: // Public functions
     // the buffer with a user specified
     // maximum number of circulations
 
-    circular_iterator                                       circ_iter(const std::ptrdiff_t& startingPositionIndex,
-                                                                      const std::ptrdiff_t& maxNumberOfCirculations);
+    circular_iterator                                                       circ_iter(const std::ptrdiff_t& startingPositionIndex,
+                                                                                      const std::ptrdiff_t& maxNumberOfCirculations);
 
-    circular_const_iterator                                 circ_citer(const std::ptrdiff_t& startingPositionIndex,
-                                                                       const std::ptrdiff_t& maxNumberOfCirculations)const;
+    circular_const_iterator                                                 circ_citer(const std::ptrdiff_t& startingPositionIndex,
+                                                                                       const std::ptrdiff_t& maxNumberOfCirculations)const;
 
-    circular_reverse_iterator                               circ_riter(const std::ptrdiff_t& startingPositionIndex,
-                                                                       const std::ptrdiff_t& maxNumberOfCirculations);
+    circular_reverse_iterator                                               circ_riter(const std::ptrdiff_t& startingPositionIndex,
+                                                                                       const std::ptrdiff_t& maxNumberOfCirculations);
 
-    circular_const_reverse_iterator                         circ_criter(const std::ptrdiff_t& startingPositionIndex,
-                                                                        const std::ptrdiff_t& maxNumberOfCirculations)const;
+    circular_const_reverse_iterator                                         circ_criter(const std::ptrdiff_t& startingPositionIndex,
+                                                                                        const std::ptrdiff_t& maxNumberOfCirculations)const;
 
 
 
@@ -189,28 +190,28 @@ public: // Public functions
     // or negative
 
     template<typename blIntegerType>
-    blDataType&                                             circ_at(const blIntegerType& dataIndex);
+    blDataType&                                                             circ_at(const blIntegerType& dataIndex);
 
     template<typename blIntegerType>
-    const blDataType&                                       circ_at(const blIntegerType& dataIndex)const;
+    const blDataType&                                                       circ_at(const blIntegerType& dataIndex)const;
 
     template<typename blIntegerType>
-    blDataType&                                             circ_at(const blIntegerType& rowIndex,
-                                                                    const blIntegerType& colIndex);
+    blDataType&                                                             circ_at(const blIntegerType& rowIndex,
+                                                                                    const blIntegerType& colIndex);
 
     template<typename blIntegerType>
-    const blDataType&                                       circ_at(const blIntegerType &rowIndex,
-                                                                    const blIntegerType &colIndex)const;
+    const blDataType&                                                       circ_at(const blIntegerType &rowIndex,
+                                                                                    const blIntegerType &colIndex)const;
 
     template<typename blIntegerType>
-    blDataType&                                             circ_at(const blIntegerType& rowIndex,
-                                                                    const blIntegerType& colIndex,
-                                                                    const blIntegerType& pageIndex);
+    blDataType&                                                             circ_at(const blIntegerType& rowIndex,
+                                                                                    const blIntegerType& colIndex,
+                                                                                    const blIntegerType& pageIndex);
 
     template<typename blIntegerType>
-    const blDataType&                                       circ_at(const blIntegerType& rowIndex,
-                                                                    const blIntegerType& colIndex,
-                                                                    const blIntegerType& pageIndex)const;
+    const blDataType&                                                       circ_at(const blIntegerType& rowIndex,
+                                                                                    const blIntegerType& colIndex,
+                                                                                    const blIntegerType& pageIndex)const;
 
 
 
@@ -218,22 +219,22 @@ public: // Public functions
     // circ_at functions
 
     template<typename...Indexes>
-    blDataType&                                             circ_at(const Indexes&...dataIndexes);
+    blDataType&                                                             circ_at(const Indexes&...dataIndexes);
 
     template<typename...Indexes>
-    const blDataType&                                       circ_at(const Indexes&...dataIndexes)const;
+    const blDataType&                                                       circ_at(const Indexes&...dataIndexes)const;
 
     template<typename blIntegerType>
-    blDataType&                                             circ_at(const std::initializer_list<blIntegerType>& dataIndexes);
+    blDataType&                                                             circ_at(const std::initializer_list<blIntegerType>& dataIndexes);
 
     template<typename blIntegerType>
-    const blDataType&                                       circ_at(const std::initializer_list<blIntegerType>& dataIndexes)const;
+    const blDataType&                                                       circ_at(const std::initializer_list<blIntegerType>& dataIndexes)const;
 
     template<typename blIntegerType>
-    blDataType&                                             circ_at(const std::vector<blIntegerType>& dataIndexes);
+    blDataType&                                                             circ_at(const std::vector<blIntegerType>& dataIndexes);
 
     template<typename blIntegerType>
-    const blDataType&                                       circ_at(const std::vector<blIntegerType>& dataIndexes)const;
+    const blDataType&                                                       circ_at(const std::vector<blIntegerType>& dataIndexes)const;
 };
 //-------------------------------------------------------------------
 
@@ -244,9 +245,10 @@ public: // Public functions
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline blBuffer_3<blDataType,blDataPtr,blBufferPtr>::blBuffer_3() : blBuffer_2<blDataType,blDataPtr>()
+inline blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::blBuffer_3() : blBuffer_2<blDataType,blDataPtr,blMaxNumOfDimensions>()
 {
 }
 //-------------------------------------------------------------------
@@ -258,9 +260,10 @@ inline blBuffer_3<blDataType,blDataPtr,blBufferPtr>::blBuffer_3() : blBuffer_2<b
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline blBuffer_3<blDataType,blDataPtr,blBufferPtr>::~blBuffer_3()
+inline blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::~blBuffer_3()
 {
 }
 //-------------------------------------------------------------------
@@ -272,9 +275,10 @@ inline blBuffer_3<blDataType,blDataPtr,blBufferPtr>::~blBuffer_3()
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_begin(const std::ptrdiff_t& maxNumberOfCirculations)
+inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circular_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_begin(const std::ptrdiff_t& maxNumberOfCirculations)
 {
     return circular_iterator(this,0,maxNumberOfCirculations);
 }
@@ -283,9 +287,10 @@ inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_iterator 
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_end()
+inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circular_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_end()
 {
     return circular_iterator(this,0,0);
 }
@@ -294,9 +299,10 @@ inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_iterator 
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_const_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_cbegin(const std::ptrdiff_t& maxNumberOfCirculations)const
+inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circular_const_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_cbegin(const std::ptrdiff_t& maxNumberOfCirculations)const
 {
     return circular_const_iterator(this,0,maxNumberOfCirculations);
 }
@@ -305,9 +311,10 @@ inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_const_ite
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_const_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_cend()const
+inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circular_const_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_cend()const
 {
     return circular_const_iterator(this,0,0);
 }
@@ -321,9 +328,10 @@ inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_const_ite
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_reverse_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_rbegin(const std::ptrdiff_t& maxNumberOfCirculations)
+inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circular_reverse_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_rbegin(const std::ptrdiff_t& maxNumberOfCirculations)
 {
     return circular_reverse_iterator(this,0,maxNumberOfCirculations);
 }
@@ -332,9 +340,10 @@ inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_reverse_i
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_reverse_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_rend()
+inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circular_reverse_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_rend()
 {
     return circular_reverse_iterator(this,0,0);
 }
@@ -343,9 +352,10 @@ inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_reverse_i
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_const_reverse_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_crbegin(const std::ptrdiff_t& maxNumberOfCirculations)const
+inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circular_const_reverse_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_crbegin(const std::ptrdiff_t& maxNumberOfCirculations)const
 {
     return circular_const_reverse_iterator(this,0,maxNumberOfCirculations);
 }
@@ -354,9 +364,10 @@ inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_const_rev
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_const_reverse_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_crend()const
+inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circular_const_reverse_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_crend()const
 {
     return circular_const_reverse_iterator(this,0,0);
 }
@@ -372,9 +383,10 @@ inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_const_rev
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_iter(const std::ptrdiff_t& startingPositionIndex,
+inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circular_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_iter(const std::ptrdiff_t& startingPositionIndex,
                                                                                                                                                                                               const std::ptrdiff_t& maxNumberOfCirculations)
 {
     return circular_iterator(this,startingPositionIndex,maxNumberOfCirculations);
@@ -384,9 +396,10 @@ inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_iterator 
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_const_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_citer(const std::ptrdiff_t& startingPositionIndex,
+inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circular_const_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_citer(const std::ptrdiff_t& startingPositionIndex,
                                                                                                                                                                                                      const std::ptrdiff_t& maxNumberOfCirculations)const
 {
     return circular_const_iterator(this,startingPositionIndex,maxNumberOfCirculations);
@@ -396,9 +409,10 @@ inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_const_ite
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_reverse_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_riter(const std::ptrdiff_t& startingPositionIndex,
+inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circular_reverse_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_riter(const std::ptrdiff_t& startingPositionIndex,
                                                                                                                                                                                                        const std::ptrdiff_t& maxNumberOfCirculations)
 {
     return circular_reverse_iterator(this,startingPositionIndex,maxNumberOfCirculations);
@@ -408,9 +422,10 @@ inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_reverse_i
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
-inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_const_reverse_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_criter(const std::ptrdiff_t& startingPositionIndex,
+inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circular_const_reverse_iterator blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_criter(const std::ptrdiff_t& startingPositionIndex,
                                                                                                                                                                                                               const std::ptrdiff_t& maxNumberOfCirculations)const
 {
     return circular_const_reverse_iterator(this,startingPositionIndex,maxNumberOfCirculations);
@@ -424,11 +439,12 @@ inline typename blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circular_const_rev
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const blIntegerType& dataIndex)
+inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_at(const blIntegerType& dataIndex)
 {
     return this->at( this->circ_index(dataIndex,this->size()) );
 }
@@ -437,11 +453,12 @@ inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const b
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const blIntegerType& dataIndex)const
+inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_at(const blIntegerType& dataIndex)const
 {
     return this->at( this->circ_index(dataIndex,this->size()) );
 }
@@ -450,11 +467,12 @@ inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(c
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const blIntegerType &rowIndex,
+inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_at(const blIntegerType &rowIndex,
                                                                          const blIntegerType &colIndex)
 {
     return this->at( this->circ_index(rowIndex,this->rows()),
@@ -465,11 +483,12 @@ inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const b
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const blIntegerType& rowIndex,
+inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_at(const blIntegerType& rowIndex,
                                                                                const blIntegerType& colIndex)const
 {
     return this->at( this->circ_index(rowIndex,this->rows()),
@@ -480,11 +499,12 @@ inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(c
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const blIntegerType& rowIndex,
+inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_at(const blIntegerType& rowIndex,
                                                                          const blIntegerType& colIndex,
                                                                          const blIntegerType& pageIndex)
 {
@@ -497,11 +517,12 @@ inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const b
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const blIntegerType& rowIndex,
+inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_at(const blIntegerType& rowIndex,
                                                                                const blIntegerType& colIndex,
                                                                                const blIntegerType& pageIndex)const
 {
@@ -518,11 +539,12 @@ inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(c
 //-------------------------------------------------------------------
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename...Indexes>
 
-inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const Indexes&...dataIndexes)
+inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_at(const Indexes&...dataIndexes)
 {
     return this->circ_at({dataIndexes...});
 }
@@ -531,11 +553,12 @@ inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const I
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename...Indexes>
 
-inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const Indexes&...dataIndexes)const
+inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_at(const Indexes&...dataIndexes)const
 {
     return this->circ_at({dataIndexes...});
 }
@@ -544,11 +567,12 @@ inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(c
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const std::initializer_list<blIntegerType>& dataIndexes)
+inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_at(const std::initializer_list<blIntegerType>& dataIndexes)
 {
     std::size_t dataIndex = 0;
 
@@ -586,11 +610,12 @@ inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const s
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const std::initializer_list<blIntegerType>& dataIndexes)const
+inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_at(const std::initializer_list<blIntegerType>& dataIndexes)const
 {
     std::size_t dataIndex = 0;
 
@@ -628,11 +653,12 @@ inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(c
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const std::vector<blIntegerType>& dataIndexes)
+inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_at(const std::vector<blIntegerType>& dataIndexes)
 {
     std::size_t dataIndex = 0;
 
@@ -670,11 +696,12 @@ inline blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const s
 
 template<typename blDataType,
          typename blDataPtr,
-         typename blBufferPtr>
+         typename blBufferPtr,
+         std::size_t blMaxNumOfDimensions>
 
 template<typename blIntegerType>
 
-inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr>::circ_at(const std::vector<blIntegerType>& dataIndexes)const
+inline const blDataType& blBuffer_3<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions>::circ_at(const std::vector<blIntegerType>& dataIndexes)const
 {
     std::size_t dataIndex = 0;
 
