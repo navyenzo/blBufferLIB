@@ -2,7 +2,23 @@
 
 ## What is it?
 
-blBufferLIB is a header-only template library that defines the type ```blBuffer<T>``` as well as useful **circular iterators** and **circular reverse iterators**, which take a generic contiguous buffer and interpret it as an N-Dimensional space
+[blBufferLIB](https://github.com/navyenzo/blBufferLIB) is a header-only template library that defines a generic N-Dimensional contiguous space.
+
+It defines the type ```blBuffer<T>```, together with specialized templates such as ```blSharedMemoryBuffer``` that make working with shared memory a breeze, as well as useful **circular iterators** and **circular reverse iterators**, and **read** and **write** iterators that allow multiple threads or multiple applications to communicate easily
+
+## How do I use it?
+
+The library is a header only template library that you can use by just including its header as follows:
+
+```c++
+#include <blBufferLIB.hpp>
+
+// Everything is defined within the namespace: "blBufferLIB"
+
+// More Examples coming soon...
+```
+
+## A little deeper...
 
 - The blBuffer class can:
 
@@ -12,7 +28,7 @@ blBufferLIB is a header-only template library that defines the type ```blBuffer<
 
     - That means that if you *wrap* for example an ```std::vector<T>``` with ```blBuffer<T>```, it would then allow the contiguous ```std::vector<T>``` array to be seen as an N-Dimensional buffer
 
-- The buffer defines ```size(i)``` and ```length(i)``` functions which return the respective dimensional sizes/lengths as well as the ```size()``` andn ```length()``` functions which return the overall buffer length
+- The buffer defines ```size(i)``` and ```length(i)``` functions which return the respective dimensional sizes/lengths as well as the ```size()``` and ```length()``` functions which return the overall buffer length
 
 - The buffer also defines specially named ```size``` functions such as ```rows```, ```cols```, ```pages```, ```height```, ```width```, ```depth``` for the first 3 dimensions
 
@@ -103,6 +119,8 @@ The blBuffer class defines many additional abstract concepts that allow the user
 
 - It defines a **Region Of Interest (ROI)** with its own ```roi_at``` and ```roi_circ_at``` access functions
 
+  - This is especially useful when using blBuffer as a substitute for ```cv::Mat``` or ```IplImage``` in [OpenCV](https://opencv.org/) algorithms
+
 - It defines all the equivalent **roi circular iterators** as the ones above, which can be used in **stl-like algorithms** to parse through the buffer's ROI
 
 The blBuffer class defines also a single **circular write iterator** with corresponding **write** functions that are thread-safe and allow multiple parallel threads to write onto a common buffer
@@ -156,18 +174,6 @@ The main idea is that the data is contiguous, but is interpreted as an N-Dimensi
   - of which each page is 4 columns of (3) data points
 
   - of which each row is a single data point
-
-## How do I use it?
-
-The library is a header only template library that you can use by just including its header as follows:
-
-```c++
-#include <blBufferLIB.hpp>
-
-// Everything is defined within the namespace: "blBufferLIB"
-
-// More Examples coming soon...
-```
 
 ## Under current development
 
