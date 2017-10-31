@@ -2,9 +2,9 @@
 
 ## What is it?
 
-[blBufferLIB](https://github.com/navyenzo/blBufferLIB) is a header-only template library that defines a generic N-Dimensional contiguous space.
+[blBufferLIB](https://github.com/navyenzo/blBufferLIB) is a header-only template library that defines a generic **shareable** N-Dimensional contiguous space that can be used among multiple threads or multiple processes.
 
-It defines the type ```blBuffer<T>```, together with specialized templates such as ```blSharedMemoryBuffer``` that make working with shared memory a breeze, as well as useful **circular iterators** and **circular reverse iterators**, and **read** and **write** iterators that allow multiple threads or multiple applications to communicate easily
+- It defines the type ```blBuffer<DataType,NumOfDimensions>```, together with specialized templates such as ```blSharedMemoryBuffer<DataType,NumOfDimensions>``` that make working with shared memory a breeze, as well as useful **circular iterators** and **circular reverse iterators**, and **read** and **write** iterators that allow multiple threads or multiple applications to communicate easily
 
 ## How do I use it?
 
