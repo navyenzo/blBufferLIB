@@ -4,7 +4,7 @@
 
 [blBufferLIB](https://github.com/navyenzo/blBufferLIB) is a header-only template library that defines a generic **shareable** N-Dimensional contiguous space that can be used among multiple threads or multiple processes.
 
-- It defines the type ```blBuffer<DataType,NumOfDimensions>```, together with specialized templates such as ```blSharedMemoryBuffer<DataType,NumOfDimensions>``` that make working with shared memory a breeze.
+- It defines the type ```blBuffer<DataType,MaxNumOfDimensions>```, together with specialized templates such as ```blSharedMemoryBuffer<DataType,NumOfDimensions>``` that make working with shared memory a breeze.
 - It defines useful **circular iterators** and **circular reverse iterators**, as well as multiple **read** iterators and a single **write** iterator that allow multiple threads or multiple applications to communicate easily
 
 ## How do I use it?
@@ -51,7 +51,7 @@ The main idea is that the data is contiguous, but is interpreted as an N-Dimensi
 
   - Or *wrap* existing user supplied external contiguous data
 
-    - That means that if you *wrap* for example an ```std::vector<T>``` with ```blBuffer<T>```, it would then allow the contiguous ```std::vector<T>``` array to be seen as an N-Dimensional buffer
+    - That means that if you *wrap* for example an ```std::vector<DataType>``` with ```blBuffer<DataType,MaxNumOfDimensions>```, it would then allow the contiguous ```std::vector<DataType>``` array to be seen as an N-Dimensional buffer
 
 - The buffer defines ```size(i)``` and ```length(i)``` functions which return the respective dimensional sizes/lengths as well as the ```size()``` and ```length()``` functions which return the overall buffer length
 
@@ -65,9 +65,20 @@ The main idea is that the data is contiguous, but is interpreted as an N-Dimensi
 
 > For example:
 ```c++
-// Here we create a 3d buffer of size (3 x 3 x 10)
+// A user can define a buffer with a
+// "Maximum number of dimensions" which
+// limit the number of dimensions of the
+// buffer
 
-blBufferLIB::blBuffer<double> myBuffer;
+// Here we create a buffer that holds "doubles"
+// with a maximum number of dimensions equal to 10
+
+blBufferLIB::blBuffer<double,10> myBuffer;
+
+
+
+// We then make it a 3d buffer with a size equal to (3 x 3 x 10)
+
 myBuffer.create(3,3,10);
 
 
@@ -103,7 +114,8 @@ auto dataPoint3 = myBuffer.circ_at(1000,2231,124);
 
 
 // Here we ask for the size/length
-// of the 2nd dimensional
+// of the 2nd dimension
+// (Could use either "size" or "length")
 
 auto width = myBuffer.size(2);
 ```
