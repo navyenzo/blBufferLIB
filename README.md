@@ -78,6 +78,7 @@ blBufferLIB::blBuffer<double,10> myBuffer;
 
 
 // We then make it a 3d buffer with a size equal to (3 x 3 x 10)
+// (The remaining 7 dimensional sizes are defaulted to equal 1)
 
 myBuffer.create(3,3,10);
 
