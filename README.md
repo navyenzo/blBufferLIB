@@ -4,7 +4,8 @@
 
 [blBufferLIB](https://github.com/navyenzo/blBufferLIB) is a header-only template library that defines a generic **shareable** N-Dimensional contiguous space that can be used among multiple threads or multiple processes.
 
-- It defines the type ```blBuffer<DataType,NumOfDimensions>```, together with specialized templates such as ```blSharedMemoryBuffer<DataType,NumOfDimensions>``` that make working with shared memory a breeze, as well as useful **circular iterators** and **circular reverse iterators**, and **read** and **write** iterators that allow multiple threads or multiple applications to communicate easily
+- It defines the type ```blBuffer<DataType,NumOfDimensions>```, together with specialized templates such as ```blSharedMemoryBuffer<DataType,NumOfDimensions>``` that make working with shared memory a breeze.
+- It defines useful **circular iterators** and **circular reverse iterators**, as well as multiple **read** iterators and a single **write** iterator that allow multiple threads or multiple applications to communicate easily
 
 ## How do I use it?
 
@@ -18,6 +19,30 @@ The library is a header only template library that you can use by just including
 // More Examples coming soon...
 ```
 
+## Why would I want to use this?
+
+There could be many reasons where this blBuffer class would come in handy:
+
+- For example, it can be seen as a 2D-buffer to represent images or 2D matrices, which can be used interchangibly with opencv's "IplImage", "CvMat" and "cv::Mat" structures in opencv's algorithms
+
+  - It can be seen as a 3D-buffer to represent video streams, or 3D matrices
+
+  - It can be seen as a 3D-buffer to represent Laplacian Pyramids or Gaussian Pyramids
+
+  - It can be seen as a 4D-buffer to represent streams of Laplacian Pyramids or Gaussian Pyramids of videos or webcam feeds
+
+  - It can be seen as a generic N-Dimensional contiguous buffer to represent custom data for advanced analisys algorithm and more
+
+The main idea is that the data is contiguous, but is interpreted as an N-Dimensional space, so for example if you define a (3 x 4 x 6 x 10) buffer, the contiguous data will be seen as:
+
+- 10 different slices of (3 x 4 x 6) data points
+
+  - of which each slice is 6 pages of (3 x 4) data points
+
+  - of which each page is 4 columns of (3) data points
+
+  - of which each row is a single data point
+  
 ## A little deeper...
 
 - The blBuffer class can:
@@ -150,30 +175,6 @@ The blBuffer class defines **read iterators** with corresponding ```read``` func
     - For example one thread could keep track of what it's read by using the ```read(0)``` function, while another thread would use ```read(1)``` function, another thread the ```read(-293)``` function and so on.
 
   - The blBuffer object instantiates a ```read<id>``` iterator if it doesn't have one yet, or uses the existing one if it already has one
-
-## Why would I want to use this?
-
-There could be many reasons where this blBuffer class would come in handy:
-
-- For example, it can be seen as a 2D-buffer to represent images or 2D matrices, which can be used interchangibly with opencv's "IplImage", "CvMat" and "cv::Mat" structures in opencv's algorithms
-
-  - It can be seen as a 3D-buffer to represent video streams, or 3D matrices
-
-  - It can be seen as a 3D-buffer to represent Laplacian Pyramids or Gaussian Pyramids
-
-  - It can be seen as a 4D-buffer to represent streams of Laplacian Pyramids or Gaussian Pyramids of videos or webcam feeds
-
-  - It can be seen as a generic N-Dimensional contiguous buffer to represent custom data for advanced analisys algorithm and more
-
-The main idea is that the data is contiguous, but is interpreted as an N-Dimensional space, so for example if you define a (3 x 4 x 6 x 10) buffer, the contiguous data will be seen as:
-
-- 10 different slices of (3 x 4 x 6) data points
-
-  - of which each slice is 6 pages of (3 x 4) data points
-
-  - of which each page is 4 columns of (3) data points
-
-  - of which each row is a single data point
 
 ## Under current development
 
