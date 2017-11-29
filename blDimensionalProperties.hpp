@@ -66,6 +66,8 @@
 // array for the buffer
 
 #include <vector>
+#include <array>
+#include <cstddef>
 
 //-------------------------------------------------------------------
 
