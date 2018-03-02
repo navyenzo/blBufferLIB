@@ -33,7 +33,7 @@
 //
 //
 //
-// DEPENDENCIES:    -- blBuffer4 and all its dependencies
+// DEPENDENCIES:    -- blBuffer and all its dependencies
 //-------------------------------------------------------------------
 
 
@@ -61,39 +61,32 @@ namespace blBufferLIB
 
 
 //-------------------------------------------------------------------
-// Useful type aliases to use buffer in shared memory
+// Type Aliases needed to create a buffer in shared memory
 // with boost::interprocess library
 //-------------------------------------------------------------------
-
 #ifdef BOOST_INTERPROCESS_OFFSET_PTR_HPP
 
 
 
-// Let's abbreviate the
-// boost::interprocess
-// namespace
+// Let's abbreviate the boost::interprocess namespace
 
 namespace bsip = boost::interprocess;
 
 
 
-// Allocator alias type that will
-// allow placing data in user
-// specified shared memory segments
+// Allocator type alias that will allow placing data
+// in user specified shared memory segments
 
 template<typename blDataType>
-
 using sharedMemoryAllocatorType = bsip::allocator<blDataType,bsip::managed_shared_memory::segment_manager>;
 
 
 
-// Vector alias type that uses the
-// above defined allocator type to
-// allocate its data values in user
-// specified shared memory segments
+// Vector type alias that uses the above defined allocator
+// type to allocate its data values in user specified shared
+// memory segments
 
 template<typename blDataType>
-
 using sharedMemoryVectorType = bsip::vector< blDataType,sharedMemoryAllocatorType<blDataType> >;
 
 
@@ -116,6 +109,7 @@ template<typename blDataType,
          typename blBufferPtr = blSharedBufferPtrType<blDataType,blMaxNumOfDimensions,blDataPtr> >
 
 using blSharedBufferRoiPtrType = bsip::offset_ptr< blBuffer_4<blDataType,blDataPtr,blBufferPtr,blMaxNumOfDimensions> >;
+//-------------------------------------------------------------------
 
 
 
